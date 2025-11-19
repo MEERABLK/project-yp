@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "379312428600",
+    "project_id": "project-yp-55c23",
+    "storage_bucket": "project-yp-55c23.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:379312428600:android:96dc5d30a71d20efa2f8cd",
+        "android_client_info": {
+          "package_name": "com.example.projectyp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD68YP8O-4R1EHl6sOYr69kPYX-Ec5wqvo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
