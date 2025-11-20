@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_hex_color/flutter_hex_color.dart';
-
+import 'loginView.dart';
 void main()async {
   WidgetsFlutterBinding.ensureInitialized();
   //initialize api key like google map key like giving lat long of paris in rl has a api key
@@ -25,20 +25,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MyFS(),
+      home: RegisterScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class MyFS extends StatefulWidget {
-  MyFS({super.key});
+class RegisterScreen extends StatefulWidget {
+  RegisterScreen({super.key});
 
   @override
-  State<MyFS> createState() => _MyFSState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _MyFSState extends State<MyFS> {
+class _RegisterScreenState extends State<RegisterScreen> {
   // we are creating a db folder that is being referred as Users
   // which is created as Instance (Root Collection/folder)
   // CollectionReference contains all reference points from firebase
@@ -46,43 +46,32 @@ class _MyFSState extends State<MyFS> {
   CollectionReference users = FirebaseFirestore.instance.collection('Users');
   //what we want to add to the db
   String name = '';
+  String email ='';
   String password = '';
+  String confirmPassword = '';
 
   //function to add the data to the cloud
   Future<void> adduser() async {
-    if (name.isNotEmpty && password.isNotEmpty) {
+    if (name.isNotEmpty && password.isNotEmpty && email.isNotEmpty
+        && confirmPassword.isNotEmpty) {
       //access by the name of the key
       //so that fetching would be feasible by using Map
-      await users.add({'name': name, 'password': password});
+      await users.add({'name': name, 'email':email, 'password': password,'confirmPassword':confirmPassword});
       //change to the null value to write the second data
       setState(() {
         name = '';
+        email='';
         password = '';
-      });
-    }
-  }
-
-  // function to update
-  //this id is the document id from the cloud used to refer a particular obj
-  //to change the particular instance go for the async
-  Future<void> updateUser(String id, String newName) async {
-    if (newName.isNotEmpty) {
-
-      try
-      {
-        await users.doc(id).update({'name': newName});
-      } catch (error) {
-        print('Failed to update');
+        confirmPassword='';
       }
-    } else {
-      print('Enter a valid name');
+      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('You have Successfully Created An Account, \nPlease Login to Continue')));
+
+      Navigator.push(context,MaterialPageRoute(builder: (context)=>LoginScreen()));
+
     }
   }
 
-  // function to delete the user
-  Future<void> deleteUser(String id) async {
-    await users.doc(id).delete();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,10 +97,14 @@ class _MyFSState extends State<MyFS> {
         Column(
 
           children: [
-           Image.asset('asset/logo.png'),
-            Container(
-              width: 350,
-              height: 200,
+
+           Image.asset('asset/logo.png',width: 300,height: 300,),
+
+        Padding(
+          padding: const EdgeInsets.only(),
+          child: Center(
+            child: Container(
+            width: 600,
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
                   // 68% opacity
@@ -123,88 +116,163 @@ child:
     Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-            TextField(
+     Row(
+    children: [
+    Expanded(
+        child: Container(
+        decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.8),
+              borderRadius: BorderRadius.circular(40),
+            ),
+        alignment: Alignment.center,
+        child: Text(
+          "Email",
+          style: TextStyle(
+              fontFamily: 'Iceland', color: Colors.white, fontSize: 20),
+        ),
+      ),
+    ),
+    Expanded(
+    child: Container(
+    alignment: Alignment.center,
+    child: Text(
+    "Google",
+    style: TextStyle(
+    fontFamily: 'Iceland',
+    color: Colors.white60,
+    fontSize: 20),
+    ),
+    ),
+    ),
+    ],
+    ),
+
+    const SizedBox(height: 15),
+              Text("Create your legendary collection",style: TextStyle(color: Colors.white,fontFamily:'Iceland' ),),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Username",
+                  style: TextStyle(
+                    fontFamily: "Iceland",
+                    color: Colors.white,
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+              TextField(
+                style: TextStyle(color: Colors.white),
               //store in the variable the value
               onChanged: (value) => name = value,
               decoration: InputDecoration(
-                  hintText: 'Type your name',
+
+                  hintText: 'cardmaster23',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
+
               ),
               ),
             ),
 
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Email",
+                  style: TextStyle(
+                    fontFamily: "Iceland",
+                    color: Colors.white,
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+              TextField(
+                style: TextStyle(color: Colors.white),
+                //store in the variable the value
+                onChanged: (value) => email = value,
+                decoration: InputDecoration(
+
+                  hintText: 'your@email.com',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Password",
+                  style: TextStyle(
+                    fontFamily: "Iceland",
+                    color: Colors.white,
+                    fontSize: 18,
+                  ),
+                ),
+              ),
             TextField(
+              style: TextStyle(color: Colors.white),
               onChanged: (value) => password = value,
               obscureText: true,
               decoration: InputDecoration(
-                  hintText: 'Type your password',
+                  hintText: '...................',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
               ),
 
             ),
+
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Confirm Password",
+                  style: TextStyle(
+                    fontFamily: "Iceland",
+                    color: Colors.white,
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+              TextField(
+                style: TextStyle(color: Colors.white),
+                onChanged: (value) => confirmPassword = value,
+                obscureText: true,
+                decoration: InputDecoration(
+                  hintText: '...................',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+
+              ),
+              SizedBox(height: 20,),
+
+              Row(
+                children: [
+
+
+              ElevatedButton(onPressed: adduser, child: Text('Create Account')),
+SizedBox(height: 20,),
+
+
+              ElevatedButton(onPressed: (){
+                Navigator.push(context,MaterialPageRoute(builder: (context)=>LoginScreen()));
+              },
+                  child: Text('Login')),
+      ],
+      ),
+
             ],
             ),
             ),
             //
-            ElevatedButton(onPressed: adduser, child: Text('Add user to FS')),
-            SizedBox(height: 10,),
-            Expanded(
-              //change data simultaneously
-              //query snapshot(chunk of data) is the way to manipulate the db with a
-              //junk of data as a result
-                child: StreamBuilder<QuerySnapshot> (
-                  stream: users.snapshots(),
-                  builder: (context, snapshot)
-                  {
-                    //id there is no data to say something happening
-                    if(!snapshot.hasData) return Text('Loading....');
-                    return ListView(
-                        children: snapshot.data!.docs.map ((doc) {
-                          return ListTile(
-                            title: Text(doc['name']),
-                            subtitle: Text('Password: ${doc['password']}',),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                TextButton(
-                                    onPressed: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            String newName = '';
-                                            return AlertDialog(
-                                              title: Text("Edit User"),
-                                              content: TextField(
-                                                onChanged: (value) => newName = value,
-                                                decoration: InputDecoration(hintText: 'Enter new Name'),
 
-                                              ),
-                                              actions: [
-                                                ElevatedButton(onPressed: () {
-                                                  updateUser(doc.id, newName);
-                                                  Navigator.pop(context);
-                                                }, child: Text('Update'))
-                                              ],
-                                            );
-                                          });
-                                    },
-                                    child: Text("Edit")),
-                                TextButton(
-                                    onPressed: () => deleteUser(doc.id),
-                                    child: Text('Delete'))
-                              ],
-                            ),
-                          );
-                        }).toList()
-                    );
-                  },
-                ))
-          ],
+
+            ),
         ),
+        ],
       ),
+    ),
     );
   }
 }
