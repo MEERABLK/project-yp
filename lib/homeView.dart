@@ -10,15 +10,59 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: HexColor("#1B2A47"), // dark blue background
-      body: SafeArea(
-        child: Column(
-          children: [
+
+      body: Container(
+    decoration: BoxDecoration(
+    gradient: LinearGradient(
+        colors: [
+        HexColor("#0F2F4E"),
+    HexColor("#9380D5"),
+    ],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    ),
+    ),
+    child: Padding(
+    padding: EdgeInsets.all(16),
+
+    child: Column(
+    children: [
+        // Padding(
+        // padding: const EdgeInsets.only(),
+        //   child: Center(
+        //     child: Container(
+        //       width: 600,
+        //       padding: EdgeInsets.all(16),
+        //       decoration: BoxDecoration(
+        //         // 68% opacity
+        //           color: Colors.black.withOpacity(0.68),
+        //           borderRadius: BorderRadius.circular(5)
+        //       ),
+      //==========Alternative====
+    // Padding(
+    //
+    // padding: const EdgeInsets.only(),
+    //   child: Center(
+    //     child: Container(
+    //       width: 600,
+    //       padding: EdgeInsets.all(16),
+    //       decoration: BoxDecoration(
+    //         // 68% opacity
+    //           color: Colors.black.withOpacity(0.68),
+    //           borderRadius: BorderRadius.circular(5)
+    //       ),
+    //       child: Column(
+    //         children: [
+
+
             // Top Section
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.only(),
+
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+
                 children: [
                   Text(
                     "Project YP",
@@ -113,14 +157,17 @@ class HomeView extends StatelessWidget {
           ],
         ),
       ),
+      ),
 
       // Bottom Navigation
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: HexColor("#0F1A2C"),
-        selectedItemColor: Colors.amber,
-        unselectedItemColor: Colors.black,
+
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white,
+
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home",backgroundColor: HexColor("#4B4B4B")),
           BottomNavigationBarItem(icon: Icon(Icons.book), label: "My Concepts"),
           BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: "Create Card"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
@@ -141,14 +188,14 @@ class FilterButton extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: selected ? Colors.amber : Colors.transparent,
+        color: selected ? Colors.black : Colors.transparent,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: Colors.white54),
       ),
       child: Text(
         label,
         style: TextStyle(
-          color: selected ? Colors.black : Colors.white,
+          color: selected ? Colors.white : Colors.white,
         ),
       ),
     );
