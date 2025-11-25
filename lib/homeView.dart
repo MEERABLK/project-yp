@@ -1,208 +1,209 @@
 import 'dependencies.dart';
 import 'pages.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
 
+  @override
+  State<HomeView> createState() => _HomeViewScreenState();
+}
 
-
-
+class _HomeViewScreenState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: HexColor("#0F2F4E"),
+        automaticallyImplyLeading: false,
+      ),
 
       body: Container(
-    decoration: BoxDecoration(
-    gradient: LinearGradient(
-        colors: [
-        HexColor("#0F2F4E"),
-    HexColor("#9380D5"),
-    ],
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-    ),
-    ),
-    child: Padding(
-    padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [HexColor("#0F2F4E"), HexColor("#9380D5")],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
 
-    child: Column(
-    children: [
-        // Padding(
-        // padding: const EdgeInsets.only(),
-        //   child: Center(
-        //     child: Container(
-        //       width: 600,
-        //       padding: EdgeInsets.all(16),
-        //       decoration: BoxDecoration(
-        //         // 68% opacity
-        //           color: Colors.black.withOpacity(0.68),
-        //           borderRadius: BorderRadius.circular(5)
-        //       ),
-      //==========Alternative====
-    // Padding(
-    //
-    // padding: const EdgeInsets.only(),
-    //   child: Center(
-    //     child: Container(
-    //       width: 600,
-    //       padding: EdgeInsets.all(16),
-    //       decoration: BoxDecoration(
-    //         // 68% opacity
-    //           color: Colors.black.withOpacity(0.68),
-    //           borderRadius: BorderRadius.circular(5)
-    //       ),
-    //       child: Column(
-    //         children: [
+        child: Column(
+          children: [
+            const SizedBox(height: 5),
 
-
-            // Top Section
-            Padding(
-              padding: const EdgeInsets.only(),
-
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-
-                children: [
-                  Text(
-                    "Project YP",
-                    style: TextStyle(
-                      color: Colors.amber,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
+            const Text(
+              "Project YP",
+              style: TextStyle(
+                color: Colors.amber,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Discover",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500),
+
+            const SizedBox(height: 20),
+            Center(
+              child: Container(
+                width: 600,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.68),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Discover
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        height: 40,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: HexColor("#786868").withOpacity(0.10),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Text(
+                          "Discover",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      // Search
+                      TextField(
+                        style: const TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          hintText: "Search Concepts ...",
+                          hintStyle: const TextStyle(color: Colors.white54),
+                          filled: true,
+                          fillColor: HexColor("#000000").withOpacity(0.50),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                          prefixIcon: const Icon(
+                            Icons.search,
+                            color: Colors.white54,
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      // Filter Tabs
+                      Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: HexColor("#292A30").withOpacity(0.44),
+                          borderRadius: BorderRadius.circular(40),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(0.8),
+                                  borderRadius: BorderRadius.circular(40),
+                                ),
+                                alignment: Alignment.center,
+                                child: const Text(
+                                  "All Cards",
+                                  style: TextStyle(
+                                      fontFamily: 'Iceland',
+                                      color: Colors.white,
+                                      fontSize: 20),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.08),
+                                  borderRadius: BorderRadius.circular(40),
+                                ),
+                                child: const Text(
+                                  "Pokémon",
+                                  style: TextStyle(
+                                      fontFamily: 'Iceland',
+                                      color: Colors.white60,
+                                      fontSize: 20),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.08),
+                                  borderRadius: BorderRadius.circular(40),
+                                ),
+                                child: const Text(
+                                  "Yu-Gi-Oh !",
+                                  style: TextStyle(
+                                      fontFamily: 'Iceland',
+                                      color: Colors.white60,
+                                      fontSize: 20),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      // Concept Cards
+                      ConceptCard(
+                        title: "Zoroark",
+                        type: "DARK",
+                        description:
+                        "This Pokémon cares deeply about others of its kind, and it will conjure terrifying illusions to keep its den and pack safe.",
+                        color: Colors.teal,
+                        imageUrl: "asset/zoroark.png",
+                        username: "FireMaster100",
+                        likes: 234,
+                      ),
+                      ConceptCard(
+                        title: "Dark Blade",
+                        type: "DARK",
+                        description: "A powerful dark warrior from the shadows.",
+                        color: Colors.brown,
+                        imageUrl: "asset/darkblade.png",
+                        username: "YuGiFan",
+                        likes: 112,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-            SizedBox(height: 10),
 
-            // Search Bar
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: TextField(
-                style: TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  hintText: "Search Concepts ...",
-                  hintStyle: TextStyle(color: Colors.white54),
-                  filled: true,
-                  fillColor: HexColor("#0F1A2C"),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                  prefixIcon: Icon(Icons.search, color: Colors.white54),
-                ),
-              ),
-            ),
-            SizedBox(height: 10),
+                  ],
 
-            // Filter Tabs
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  FilterButton(label: "All Cards", selected: true),
-                  SizedBox(width: 8),
-                  FilterButton(label: "Pokémon"),
-                  SizedBox(width: 8),
-                  FilterButton(label: "Yu-Gi-Oh!"),
-                ],
-              ),
-            ),
-            SizedBox(height: 10),
 
-            // Cards List
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                children: [
-                  ConceptCard(
-                    title: "Zoroark",
-                    type: "DARK",
-                    description:
-                    "This Pokémon cares deeply about others of its kind, and it will conjure terrifying illusions to keep its den and pack safe.",
-                    color: Colors.teal,
-                    imageUrl: "asset/zoroark.png",
-                    username: "FireMaster100",
-                    likes: 234,
-                  ),
-                  ConceptCard(
-                    title: "Dark Blade",
-                    type: "DARK",
-                    description:
-                    "A powerful dark warrior from the shadows.",
-                    color: Colors.brown,
-                    imageUrl: "asset/darkblade.png",
-                    username: "YuGiFan",
-                    likes: 112,
-                  ),
-                ],
-              ),
-            ),
-          ],
+
+
         ),
       ),
-      ),
 
-      // Bottom Navigation
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: HexColor("#0F1A2C"),
 
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white,
 
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home",backgroundColor: HexColor("#4B4B4B")),
-          BottomNavigationBarItem(icon: Icon(Icons.book), label: "My Concepts"),
-          BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: "Create Card"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
-        ],
-      ),
+
     );
   }
 }
 
-// Filter button widget
-class FilterButton extends StatelessWidget {
-  final String label;
-  final bool selected;
-  const FilterButton({required this.label, this.selected = false, super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: selected ? Colors.black : Colors.transparent,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white54),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: selected ? Colors.white : Colors.white,
-        ),
-      ),
-    );
-  }
-}
-
-// Concept Card Widget
 class ConceptCard extends StatelessWidget {
   final String title, type, description, imageUrl, username;
   final int likes;

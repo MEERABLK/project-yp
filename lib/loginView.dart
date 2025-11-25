@@ -85,6 +85,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
+                  Container(
+                  padding: EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: HexColor("#292A30").withOpacity(0.44),   // Light background behind both
+                    borderRadius: BorderRadius.circular(40),
+                  ),child:
                       Row(
                         children: [
                           Expanded(
@@ -119,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ],
                       ),
-
+                  ),
                       const SizedBox(height: 15),
                       Text(
                         "Welcome Back",
