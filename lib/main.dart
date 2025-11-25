@@ -110,12 +110,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 borderRadius: BorderRadius.circular(5)
               ),
 
+
 child:
     Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
+
+    Container(
+    padding: EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: HexColor("#292A30").withOpacity(0.44),   // Light background behind both
+                borderRadius: BorderRadius.circular(40),
+              ),
+     child:
      Row(
     children: [
+
     Expanded(
         child: Container(
         decoration: BoxDecoration(
@@ -144,7 +154,7 @@ child:
     ),
     ],
     ),
-
+    ),
     const SizedBox(height: 15),
               Text("Create your legendary collection",style: TextStyle(color: Colors.white,fontFamily:'Iceland' ),),
               Align(
