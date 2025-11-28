@@ -12,12 +12,12 @@ class _HomeViewScreenState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true, // gradient behind AppBar
-      appBar: AppBar(
-        backgroundColor: Colors.transparent, // let gradient show through
-        elevation: 0,
-        automaticallyImplyLeading: false,
-      ),
+      // extendBodyBehindAppBar: true, // gradient behind AppBar
+      // appBar: AppBar(
+      //
+      //   backgroundColor: Colors.transparent, // let gradient show through
+      //   automaticallyImplyLeading: false,
+      // ),
       body: Stack(
         children: [
         Container(
@@ -178,17 +178,17 @@ class _HomeViewScreenState extends State<HomeView> {
 
 // Bottom Navigation
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black.withOpacity(0.68),
 
-
-      selectedItemColor: Colors.white,
+        type: BottomNavigationBarType.fixed,
+         backgroundColor: HexColor("#9380D5"),
+elevation: 0,
         unselectedItemColor: Colors.white,
-
+        selectedItemColor: Colors.white,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home",backgroundColor: HexColor("#4B4B4B")),
-          BottomNavigationBarItem(icon: Icon(Icons.book), label: "My Concepts"),
-          BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: "Create Card"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home",backgroundColor: Colors.black.withOpacity(0.21)),
+          BottomNavigationBarItem(icon: Icon(Icons.collections), label: "My Concepts"),
+          BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: "Create Card",),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile",),
         ],
       ),
 
