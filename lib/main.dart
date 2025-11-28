@@ -6,7 +6,7 @@ void main() async {
   //initialize api key like google map key like giving lat long of paris in rl has a api key
   await Firebase.initializeApp(
       //everything come from the JSON file
-      //curent key is api key app number is appid
+      //current key is api key app number is appid
       //mobilesdk_app_id is messagingSenderId
       //projectId is projectId
       options: FirebaseOptions(
