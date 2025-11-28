@@ -40,7 +40,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               padding: const EdgeInsets.only(),
               child: Center(
                 child: Container(
-                  width: 600,
+                  width: 400,
                   padding: EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: Colors.black.withOpacity(0.68),
@@ -115,6 +115,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         onChanged: (value) => viewModel.name = value,
                         decoration: InputDecoration(
                           hintText: 'cardmaster23',
+                          hintStyle: TextStyle(color: HexColor("#464951")),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -137,6 +138,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         onChanged: (value) => viewModel.email = value,
                         decoration: InputDecoration(
                           hintText: 'your@email.com',
+                          hintStyle: TextStyle(color: HexColor("#464951")),
+
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -160,6 +163,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         onChanged: (value) => viewModel.password = value,
                         decoration: InputDecoration(
                           hintText: '...................',
+                          hintStyle: TextStyle(color: HexColor("#464951")),
+
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -183,6 +188,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         onChanged: (value) => viewModel.confirmPassword = value,
                         decoration: InputDecoration(
                           hintText: '...................',
+                          hintStyle: TextStyle(color: HexColor("#464951")),
+
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -194,11 +201,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Row(
                         children: [
                           ElevatedButton(
+                            style: ElevatedButton.styleFrom(backgroundColor: HexColor("#9380D5")),
                             onPressed: handleRegister,
-                            child: Text('Create Account'),
+                            child: Text('Create Account',style: TextStyle(color: Colors.white),),
                           ),
-                          SizedBox(width: 20),
+                          Spacer(),
                           ElevatedButton(
+                            style: ElevatedButton.styleFrom(backgroundColor: HexColor("#DACFFF")),
                             onPressed: () {
                               Navigator.push(
                                 context,
@@ -207,7 +216,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                               );
                             },
-                            child: Text('Login'),
+                            child: Text('Login',style: TextStyle(color: HexColor("#7C59A7"))),
                           ),
                         ],
                       ),

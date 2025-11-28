@@ -74,9 +74,11 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.only(top: 10),
               child: Center(
                 child: Container(
-                  width: 600,
+                  width: 400,
+
                   padding: EdgeInsets.all(16),
                   decoration: BoxDecoration(
+
                     // 68% opacity
                     color: Colors.black.withOpacity(0.68),
                     borderRadius: BorderRadius.circular(5),
@@ -151,8 +153,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         onChanged: (value) => name = value,
                         decoration: InputDecoration(
                           hintText: 'cardmaster23',
+                          hintStyle: TextStyle(color: HexColor("#464951")),
+
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(14),
                           ),
                         ),
                       ),
@@ -173,6 +177,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         obscureText: true,
                         decoration: InputDecoration(
                           hintText: '...................',
+                          hintStyle: TextStyle(color: HexColor("#464951")),
+
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -182,14 +188,21 @@ class _LoginScreenState extends State<LoginScreen> {
                       Row(
                         children: [
                       ElevatedButton(
+                        style: ElevatedButton.styleFrom(backgroundColor: HexColor("#DACFFF")),
+
                         onPressed: login,
-                        child: Text('Login'),
+                        child: Text('Login',style: TextStyle(color: HexColor("#7C59A7"))),
                       ),
-                      SizedBox(height: 20),
-                          ElevatedButton(onPressed: ()
+                          Spacer(),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(backgroundColor: HexColor("#9380D5")),
+
+                            onPressed: ()
                               {
                                 Navigator.pop(context);
-                              }, child: Text('Create Account')),
+                              },
+                              child: Text('Create Account',style: TextStyle(color: Colors.white),),),
+
 
                         ],
                   ),
