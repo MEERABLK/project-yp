@@ -96,7 +96,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
           children: [
 
-           Image.asset('asset/logo.png',width: 300,height: 300,),
+           Image.asset('asset/logo.png',width: 300,height: 200,),
 
         Padding(
           padding: const EdgeInsets.only(),

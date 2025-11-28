@@ -12,12 +12,17 @@ class _HomeViewScreenState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true, // gradient behind AppBar
       appBar: AppBar(
-        backgroundColor: HexColor("#0F2F4E"),
+        backgroundColor: Colors.transparent, // let gradient show through
+        elevation: 0,
         automaticallyImplyLeading: false,
       ),
-
-      body: Container(
+      body: Stack(
+        children: [
+        Container(
+        width: double.infinity,
+        height: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [HexColor("#0F2F4E"), HexColor("#9380D5")],
@@ -25,74 +30,56 @@ class _HomeViewScreenState extends State<HomeView> {
             end: Alignment.bottomCenter,
           ),
         ),
+      ),
 
+      Container(
+        width: double.infinity,
+        color: Colors.black.withOpacity(0.68),
+      ),
+
+      SingleChildScrollView(
+        padding: const EdgeInsets.only(top: 20, left: 16, right: 16, bottom: 30),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 5),
-
-            const Text(
-              "Project YP",
-              style: TextStyle(
-                color: Colors.amber,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              height: 40,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: HexColor("#786868").withOpacity(0.10),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Text(
+                "Discover",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
 
             const SizedBox(height: 20),
-            Center(
-              child: Container(
-                width: 600,
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.68),
-                  borderRadius: BorderRadius.circular(5),
+
+            // Search field
+            TextField(
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                hintText: "Search Concepts ...",
+                hintStyle: const TextStyle(color: Colors.white54),
+                filled: true,
+                fillColor: HexColor("#000000").withOpacity(0.50),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
                 ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Discover
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                        height: 40,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: HexColor("#786868").withOpacity(0.10),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Text(
-                          "Discover",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
+                prefixIcon: const Icon(Icons.search, color: Colors.white54),
+              ),
+            ),
 
-                      const SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-                      // Search
-                      TextField(
-                        style: const TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          hintText: "Search Concepts ...",
-                          hintStyle: const TextStyle(color: Colors.white54),
-                          filled: true,
-                          fillColor: HexColor("#000000").withOpacity(0.50),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide.none,
-                          ),
-                          prefixIcon: const Icon(
-                            Icons.search,
-                            color: Colors.white54,
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 20),
 
                       // Filter Tabs
                       Container(
@@ -185,15 +172,24 @@ class _HomeViewScreenState extends State<HomeView> {
                     ],
                   ),
                 ),
+
+    ],
               ),
-            ),
 
-                  ],
+// Bottom Navigation
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.black.withOpacity(0.68),
 
 
+      selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white,
 
-
-        ),
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home",backgroundColor: HexColor("#4B4B4B")),
+          BottomNavigationBarItem(icon: Icon(Icons.book), label: "My Concepts"),
+          BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: "Create Card"),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
+        ],
       ),
 
 
