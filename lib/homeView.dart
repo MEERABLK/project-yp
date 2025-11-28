@@ -71,7 +71,7 @@ class _HomeViewScreenState extends State<HomeView> {
                 filled: true,
                 fillColor: HexColor("#000000").withOpacity(0.50),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(20),
                   borderSide: BorderSide.none,
                 ),
                 prefixIcon: const Icon(Icons.search, color: Colors.white54),
@@ -274,8 +274,12 @@ class ConceptCard extends StatelessWidget {
                 Text(username, style: TextStyle(color: Colors.white70)),
                 Spacer(),
                 Icon(Icons.favorite, color: Colors.red, size: 18),
-                SizedBox(width: 4),
+                SizedBox(width: 5),
                 Text(likes.toString(), style: TextStyle(color: Colors.white70)),
+                SizedBox(width: 8),
+
+                Icon(Icons.chat_bubble_rounded, color: Colors.black, size: 18),
+                SizedBox(width: 4),
               ],
             ),
           ),
