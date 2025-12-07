@@ -22,12 +22,15 @@ class _HomeViewScreenState extends State<HomeView> {
   }
 
   void fetchCards() async {
-    List<YugiohModel>? data = await ApiService().getUsers();
-    setState(() {
-      cards = data ?? [];
-      loading = false;
-    });
+    List<YugiohModel>? data = await ApiService().getUsers(); // Or getCards()
+    if (data != null && data.isNotEmpty) {
+      setState(() {
+        cards = data.take(2).toList(); // take only 2 cards
+        loading = false;
+      });
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -161,34 +164,36 @@ class _HomeViewScreenState extends State<HomeView> {
                 const SizedBox(height: 20),
 
                 // Static Card Example
-                ConceptCard(
-                  title: "Zoroark",
-                  type: "DARK",
-                  description:
-                  "This Pokémon cares deeply about others of its kind, and it will conjure terrifying illusions to keep its den and pack safe.",
-                  color: Colors.teal,
-                  imageUrl: "assets/zoroark.png",
-                  username: "FireMaster100",
-                  likes: 234,
-                ),
+                // ConceptCard(
+                //   title: "Zoroark",
+                //   type: "DARK",
+                //   description:
+                //   "This Pokémon cares deeply about others of its kind, and it will conjure terrifying illusions to keep its den and pack safe.",
+                //   color: Colors.teal,
+                //   imageUrl: "assets/zoroark.png",
+                //   username: "FireMaster100",
+                //   likes: 234,
+                // ),
 
                 // Dynamic Yu-Gi-Oh Cards
                 if (loading)
                   const Center(child: CircularProgressIndicator())
                 else
                   Column(
-                    // children: cards.map((card) {
-                      // return ConceptCard(
-                      //   title: card.name,
-                      //   type: card.type,
-                      //   description: card.desc,
-                      //   color: Colors.blueGrey,
-                      //   // imageUrl: card.card_images.image_url_cropped,
-                      //   username: "System",
-                      //   likes: 0,
-                      // );
-
+                    children: cards.map((card) {
+                      return ConceptCard(
+                        title: card.name,
+                        type: card.type,
+                        description: card.desc,
+                        color: Colors.blueGrey,
+                        imageUrl: card.card_images.image_url_cropped, // no [0]!
+                        likes: 0,
+                      );
+                    }).toList(),
                   ),
+
+
+
               ],
             ),
           ),
@@ -215,9 +220,10 @@ class _HomeViewScreenState extends State<HomeView> {
 
 // Concept Card
 class ConceptCard extends StatelessWidget {
-  final String title, type, description, imageUrl, username;
+  final String title, type, description, imageUrl;
   final int likes;
   final Color color;
+  final String? username; // nullable now
 
   const ConceptCard({
     required this.title,
@@ -225,7 +231,7 @@ class ConceptCard extends StatelessWidget {
     required this.description,
     required this.color,
     required this.imageUrl,
-    required this.username,
+    this.username ,
     required this.likes,
     super.key,
   });
@@ -292,7 +298,7 @@ class ConceptCard extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
-                Text(username, style: const TextStyle(color: Colors.white70)),
+                Text(username??"", style:  TextStyle(color: Colors.white70)),
                 const Spacer(),
                 const Icon(Icons.favorite, color: Colors.red, size: 18),
                 const SizedBox(width: 5),
