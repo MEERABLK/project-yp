@@ -31,7 +31,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Column(
           children: [
             Image.asset(
-              'asset/logo.png',
+              'assets/logo.png',
               width: 300,
               height: 200,
             ),

@@ -6,14 +6,16 @@ import 'dart:convert';
 // This function takes a raw JSON string (str),
 // decodes it into a List of maps (dynamic objects),
 // and then maps each one to a UserModel object using fromJson()
-List<YugiohModel> yuGiOhModelFromJson(String str) =>
-    List<YugiohModel>.from(json.decode(str).map((x) => YugiohModel.fromJson(x)));
-
+List<YugiohModel> yugiohModelFromJson(String str) {
+  final jsonData = json.decode(str);        // decode JSON string -> Map
+  final List<dynamic> dataList = jsonData["data"]; // extract the "data" array
+  return dataList.map((x) => YugiohModel.fromJson(x)).toList();
+}
 
 // This function takes a List<UserModel> objects,
 // converts each one into a Map (using toJson()),
 // and encodes the entire list into a JSON strin
-String yuGiOhModelToJson(List<YugiohModel> data) =>
+String yugiohModelToJson(List<YugiohModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 //step 2
@@ -22,23 +24,19 @@ class YugiohModel {
   YugiohModel({
     required this.id,
     required this.name,
-    required this.username,
-    required this.email,
-    required this.address,
-    required this.phone,
-    required this.website,
-    required this.company,
+    required this.type,
+    required this.desc,
+    required this.card_images,
+
   });
   // Fields (properties) for each user
 
   int id;
   String name;
-  String username;
-  String email;
-  Address address;
-  String phone;
-  String website;
-  Company company;
+  String type;
+  String desc;
+   CardImages card_images;
+// String card_images;
 
   //step 3
   // Converts a Map<String, dynamic> (decoded JSON) into a UserModel object
@@ -46,12 +44,12 @@ class YugiohModel {
   factory YugiohModel.fromJson(Map<String, dynamic> json) => YugiohModel(
     id: json["id"],
     name: json["name"],
-    username: json["username"],
-    email: json["email"],
-    address: Address.fromJson(json["address"]),
-    phone: json["phone"],
-    website: json["website"],
-    company: Company.fromJson(json["company"]),
+    type: json["type"],
+    desc: json["desc"],
+      // card_images: json["card_images"]
+    // card_images: CardImages.fromJson(json["card_images"]),
+     card_images: CardImages.fromJson(json["card_images"][0]), // first image
+
   );
 
   //step 4
@@ -60,87 +58,30 @@ class YugiohModel {
   Map<String, dynamic> toJson() => {
     "id": id,
     "name": name,
-    "username": username,
-    "email": email,
-    "address": address.toJson(),
-    "phone": phone,
-    "website": website,
-    "company": company.toJson(),
+    "type": type,
+    "desc": desc,
+     "card_images": card_images.toJson(),
   };
 }
 
-class Address {
-  Address({
-    required this.street,
-    required this.suite,
-    required this.city,
-    required this.zipcode,
-    required this.geo,
+class CardImages {
+  CardImages({
+    required this.image_url_cropped,
+
   });
 
-  String street;
-  String suite;
-  String city;
-  String zipcode;
-  Geo geo;
+  String image_url_cropped;
 
-  factory Address.fromJson(Map<String, dynamic> json) => Address(
-    street: json["street"],
-    suite: json["suite"],
-    city: json["city"],
-    zipcode: json["zipcode"],
-    geo: Geo.fromJson(json["geo"]),
+
+  factory CardImages.fromJson(Map<String, dynamic> json) => CardImages(
+
+    image_url_cropped: json["image_url_cropped"],
   );
 
   Map<String, dynamic> toJson() => {
-    "street": street,
-    "suite": suite,
-    "city": city,
-    "zipcode": zipcode,
-    "geo": geo.toJson(),
+    "image_url_cropped": image_url_cropped,
+
   };
 }
 
-class Geo {
-  Geo({
-    required this.lat,
-    required this.lng,
-  });
 
-  String lat;
-  String lng;
-
-  factory Geo.fromJson(Map<String, dynamic> json) => Geo(
-    lat: json["lat"],
-    lng: json["lng"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "lat": lat,
-    "lng": lng,
-  };
-}
-
-class Company {
-  Company({
-    required this.name,
-    required this.catchPhrase,
-    required this.bs,
-  });
-
-  String name;
-  String catchPhrase;
-  String bs;
-
-  factory Company.fromJson(Map<String, dynamic> json) => Company(
-    name: json["name"],
-    catchPhrase: json["catchPhrase"],
-    bs: json["bs"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "name": name,
-    "catchPhrase": catchPhrase,
-    "bs": bs,
-  };
-}
