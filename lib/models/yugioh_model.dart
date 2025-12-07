@@ -6,20 +6,20 @@ import 'dart:convert';
 // This function takes a raw JSON string (str),
 // decodes it into a List of maps (dynamic objects),
 // and then maps each one to a UserModel object using fromJson()
-List<UserModel> userModelFromJson(String str) =>
-    List<UserModel>.from(json.decode(str).map((x) => UserModel.fromJson(x)));
+List<YugiohModel> yuGiOhModelFromJson(String str) =>
+    List<YugiohModel>.from(json.decode(str).map((x) => YugiohModel.fromJson(x)));
 
 
 // This function takes a List<UserModel> objects,
 // converts each one into a Map (using toJson()),
 // and encodes the entire list into a JSON strin
-String userModelToJson(List<UserModel> data) =>
+String yuGiOhModelToJson(List<YugiohModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 //step 2
 // Represents a user object with nested fields like Address and Company
-class UserModel {
-  UserModel({
+class YugiohModel {
+  YugiohModel({
     required this.id,
     required this.name,
     required this.username,
@@ -43,7 +43,7 @@ class UserModel {
   //step 3
   // Converts a Map<String, dynamic> (decoded JSON) into a UserModel object
   // Uses other model classes (Address, Company) to decode nested JSON fields
-  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
+  factory YugiohModel.fromJson(Map<String, dynamic> json) => YugiohModel(
     id: json["id"],
     name: json["name"],
     username: json["username"],

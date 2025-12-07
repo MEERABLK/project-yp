@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 
 
 class ApiService {
-  Future<List<UserModel>?> getUsers() async {
+  Future<List<YugiohModel>?> getUsers() async {
     // This method fetches a list of users from the API.
     // It returns a Future because HTTP calls are asynchronous.
     try
@@ -17,7 +17,7 @@ class ApiService {
       var response = await http.get(url);
       if (response.statusCode == 200) {
         // If status code is 200 (OK), decode the JSON into a list of UserModel
-        List<UserModel> _model = userModelFromJson(response.body);
+        List<YugiohModel> _model = yuGiOhModelFromJson(response.body);
 
        //return list
         return _model;
