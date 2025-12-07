@@ -1,6 +1,6 @@
-export 'homeView.dart';
-export 'loginView.dart';
+export 'Views/homeView.dart';
+export 'Views/loginView.dart';
 export 'main.dart';
-export 'userModel.dart';
-export 'registerView.dart';
-export 'registerViewModel.dart';
+export 'Models/userModel.dart';
+export 'Views/registerView.dart';
+export 'ViewModels/registerViewModel.dart';

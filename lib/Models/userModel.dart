@@ -1,6 +1,6 @@
 
-import 'dependencies.dart';
-import 'pages.dart';
+import '../dependencies.dart';
+import '../pages.dart';
 // function: basic user model structure
 class UserModel
 {

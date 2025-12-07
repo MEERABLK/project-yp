@@ -1,5 +1,5 @@
-import 'dependencies.dart';
-import 'pages.dart';
+import '../dependencies.dart';
+import '../pages.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
