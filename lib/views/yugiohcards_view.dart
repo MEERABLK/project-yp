@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:projectyp/models/yugioh_model.dart';
 import 'package:projectyp/pages.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -25,59 +25,61 @@ class APIDEMO extends StatefulWidget {
 }
 
 class _APIDEMOState extends State<APIDEMO> {
-  // create a list container that stores the list of userModel
   List<YugiohModel>? _userModel = [];
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    // write a function to get the data
     _getData();
   }
 
   void _getData() async {
-    _userModel = (await ApiService()
-        .getUsers())!; // assert that this obj is not null at that instant
-    Future.delayed(Duration(seconds: 2)).then((value) => setState(() {}));
+    List<YugiohModel>? allCards = await ApiService().getUsers();
+    if (allCards != null && allCards.isNotEmpty) {
+      setState(() {
+        _userModel = allCards.take(2).toList();
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Listing Users from REST API'),
+        title: Text('Listing Cards from REST API'),
       ),
       body: _userModel == null || _userModel!.isEmpty
-          ? Center(
-        child: CircularProgressIndicator(),
-      )
+          ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
         itemCount: _userModel!.length,
         itemBuilder: (context, index) {
+          final card = _userModel![index];
+          final imageUrl = card.card_images.image_url_cropped; // directly use cropped image
           return Card(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(_userModel![index].id.toString()),
-                    Text(_userModel![index].name)
-                  ],
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(_userModel![index].name),
-                    Text(_userModel![index].type),
-                    // Text(_userModel![index].card_images.image_url_cropped),
-                    Text(_userModel![index].desc),
-                  ],
-                )
-              ],
+            margin: const EdgeInsets.all(10),
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    card.name,
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+                  Image.network(card.card_images.image_url_cropped, width: 50),
+                  // Image.network(
+                  //   imageUrl,
+                  //   height: 150,
+                  //   fit: BoxFit.contain,
+                  // ),
+                  const SizedBox(height: 10),
+                  Text("Type: ${card.type}"),
+                  const SizedBox(height: 5),
+                  Text("Description: ${card.desc}"),
+                ],
+              ),
             ),
           );
         },

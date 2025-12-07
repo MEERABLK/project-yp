@@ -48,8 +48,9 @@ class YugiohModel {
     desc: json["desc"],
       // card_images: json["card_images"]
     // card_images: CardImages.fromJson(json["card_images"]),
-     card_images: CardImages.fromJson(json["card_images"][0]), // first image
-
+    card_images: (json["card_images"] != null && json["card_images"].isNotEmpty)
+        ? CardImages.fromJson(json["card_images"][0]) // first (and only) image
+        : CardImages(image_url_cropped: ""), // fallback
   );
 
   //step 4
