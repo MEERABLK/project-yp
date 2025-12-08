@@ -1,8 +1,5 @@
-import 'package:flutter/material.dart';
 import '../dependencies.dart';
-import '../models/yugioh_model.dart';
-import '../services/api_service.dart';
-
+import 'package:projectyp/pages.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -12,6 +9,17 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewScreenState extends State<HomeView> {
+  int _currentIndex = 0;
+
+  // List of screens corresponding to each BottomNavigationBarItem
+  final List<Widget> _screens = [
+    HomeView(),
+    Placeholder(),        // My Concepts placeholder
+    Placeholder(),
+    ProfileView(),   // profile screen
+  ];
+
+
   List<YugiohModel> cards = [];
   bool loading = true;
 
@@ -22,7 +30,7 @@ class _HomeViewScreenState extends State<HomeView> {
   }
 
   void fetchCards() async {
-    List<YugiohModel>? data = await ApiService().getUsers(); // Or getCards()
+    List<YugiohModel>? data = await ApiService().getUsers();
     if (data != null && data.isNotEmpty) {
       setState(() {
         cards = data.take(2).toList(); // take only 2 cards
@@ -35,7 +43,9 @@ class _HomeViewScreenState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
+      body:_currentIndex == 0
+          ?
+      Stack(
         children: [
           // Background gradient
           Container(
@@ -198,9 +208,16 @@ class _HomeViewScreenState extends State<HomeView> {
             ),
           ),
         ],
-      ),
-
+      )
+      :_screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex=index;
+          });
+        },
+
         type: BottomNavigationBarType.fixed,
         backgroundColor: HexColor("#9380D5"),
         elevation: 0,
@@ -209,8 +226,8 @@ class _HomeViewScreenState extends State<HomeView> {
         items: const [
           BottomNavigationBarItem(
               icon: Icon(Icons.home), label: "Home", backgroundColor: Colors.black12),
-          BottomNavigationBarItem(icon: Icon(Icons.collections), label: "My Concepts"),
-          BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: "Create Card"),
+           BottomNavigationBarItem(icon: Icon(Icons.collections), label: "My Concepts"),
+           BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: "Create Card"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
         ],
       ),

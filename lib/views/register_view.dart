@@ -75,18 +75,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                             ),
                             Expanded(
-                              child: Container(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  "Google",
-                                  style: TextStyle(
-                                    fontFamily: 'Iceland',
-                                    color: Colors.white60,
-                                    fontSize: 20,
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(40),
+                                onTap: () async{
+                                  print("Google button clicked");
+                                  // TODO: Navigate or trigger Google Auth
+
+                          bool isLogged = await  login();
+
+                          if(isLogged)
+                            {
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeView()));
+                            }
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "Google",
+                                    style: TextStyle(
+                                      fontFamily: 'Iceland',
+                                      color: Colors.white60,
+                                      fontSize: 20,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
+
                           ],
                         ),
                       ),
@@ -231,6 +246,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
+//   Future <bool> login() async
+//   {
+//    final user = await GoogleSignIn;
+//    GoogleSignInAuthentication userAuth = await user!.authentication;
+// var credential = GoogleAuthProvider.credential(idToken: userAuth.idToken,accessToken:userAuth.accessToken);
+//
+//  await FirebaseAuth.instance.signInWithCredential(credential);
+//  return FirebaseAuth.instance.currentUser !=null ;
+//   }
+
+
+  Future<bool> login() async {
+      // Trigger the authentication flow
+
+      final user = await GoogleSignIn().signIn();
+
+      // Obtain the auth details from the request
+       GoogleSignInAuthentication userAuth = await user!.authentication;
+
+      // Create a new credential
+      var credential = GoogleAuthProvider.credential(
+        idToken: userAuth.idToken,
+        accessToken: userAuth.accessToken,
+      );
+
+      // Once signed in, return the UserCredential
+       await FirebaseAuth.instance.signInWithCredential(credential);
+       return FirebaseAuth.instance.currentUser != null;
+  }
   Future<void> handleRegister() async {
     String result = await viewModel.registerUser();
 

@@ -1,5 +1,6 @@
-export 'Views/home_view.dart';
-export 'Views/login_view.dart';
+export 'views/home_view.dart';
+export 'views/login_view.dart';
+export 'views/profile_view.dart';
 export 'models/user_model.dart';
 export 'views/register_view.dart';
 export 'view_models/register_view_model.dart';
