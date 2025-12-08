@@ -14,19 +14,9 @@ void main() async {
           appId: "379312428600",
           messagingSenderId: "1:379312428600:android:96dc5d30a71d20efa2f8cd",
           projectId: "project-yp-55c23"));
-  runApp(MyApp());
+  runApp(MaterialApp(
+    // home:  FirebaseAuth.instance.currentUser != null ? HomeView():RegisterScreen(),
+    home: FirebaseAuth.instance.currentUser != null ? HomeView() : OnboardingScreen(),
+    debugShowCheckedModeBanner: false,
+  ));
 }
-
-class MyApp extends StatelessWidget {
-  MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      // home:  FirebaseAuth.instance.currentUser != null ? HomeView():RegisterScreen(),
-      home: FirebaseAuth.instance.currentUser != null ? HomeView() : OnboardingScreen(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
