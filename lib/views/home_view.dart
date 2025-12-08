@@ -1,6 +1,7 @@
 import '../dependencies.dart';
 import 'package:projectyp/pages.dart';
 
+
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
 
@@ -11,17 +12,15 @@ class HomeView extends StatefulWidget {
 class _HomeViewScreenState extends State<HomeView> {
   int _currentIndex = 0;
 
-  // List of screens corresponding to each BottomNavigationBarItem
   final List<Widget> _screens = [
     HomeView(),
-    Placeholder(),        // My Concepts placeholder
     Placeholder(),
-    ProfileView(),   // profile screen
+    Placeholder(),
+    ProfileView(),
   ];
 
   void fetchLocation() async {
     Position? pos = await getUserLocation();
-
     if (pos == null) {
       print("Location unavailable");
     } else {
@@ -37,28 +36,24 @@ class _HomeViewScreenState extends State<HomeView> {
     super.initState();
     fetchCards();
     fetchLocation();
-
   }
 
   void fetchCards() async {
     List<YugiohModel>? data = await ApiService().getUsers();
     if (data != null && data.isNotEmpty) {
       setState(() {
-        cards = data.take(2).toList(); // take only 2 cards
+        cards = data.take(2).toList();
         loading = false;
       });
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:_currentIndex == 0
-          ?
-      Stack(
+      body: _currentIndex == 0
+          ? Stack(
         children: [
-          // Background gradient
           Container(
             width: double.infinity,
             height: double.infinity,
@@ -75,8 +70,7 @@ class _HomeViewScreenState extends State<HomeView> {
             color: Colors.black.withOpacity(0.68),
           ),
           SingleChildScrollView(
-            padding: const EdgeInsets.only(
-                top: 20, left: 16, right: 16, bottom: 30),
+            padding: const EdgeInsets.only(top: 20, left: 16, right: 16, bottom: 30),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -137,9 +131,7 @@ class _HomeViewScreenState extends State<HomeView> {
                           child: const Text(
                             "All Cards",
                             style: TextStyle(
-                                fontFamily: 'Iceland',
-                                color: Colors.white,
-                                fontSize: 20),
+                                fontFamily: 'Iceland', color: Colors.white, fontSize: 20),
                           ),
                         ),
                       ),
@@ -155,9 +147,7 @@ class _HomeViewScreenState extends State<HomeView> {
                           child: const Text(
                             "Pokémon",
                             style: TextStyle(
-                                fontFamily: 'Iceland',
-                                color: Colors.white60,
-                                fontSize: 20),
+                                fontFamily: 'Iceland', color: Colors.white60, fontSize: 20),
                           ),
                         ),
                       ),
@@ -173,9 +163,7 @@ class _HomeViewScreenState extends State<HomeView> {
                           child: const Text(
                             "Yu-Gi-Oh !",
                             style: TextStyle(
-                                fontFamily: 'Iceland',
-                                color: Colors.white60,
-                                fontSize: 20),
+                                fontFamily: 'Iceland', color: Colors.white60, fontSize: 20),
                           ),
                         ),
                       ),
@@ -184,51 +172,32 @@ class _HomeViewScreenState extends State<HomeView> {
                 ),
                 const SizedBox(height: 20),
 
-                // Static Card Example
-                // ConceptCard(
-                //   title: "Zoroark",
-                //   type: "DARK",
-                //   description:
-                //   "This Pokémon cares deeply about others of its kind, and it will conjure terrifying illusions to keep its den and pack safe.",
-                //   color: Colors.teal,
-                //   imageUrl: "assets/zoroark.png",
-                //   username: "FireMaster100",
-                //   likes: 234,
-                // ),
-
-                // Dynamic Yu-Gi-Oh Cards
+                // Dynamic Cards
                 if (loading)
                   const Center(child: CircularProgressIndicator())
                 else
                   Column(
                     children: cards.map((card) {
                       return ConceptCard(
+                        cardId: (card.id ?? card.name).toString(),
                         title: card.name,
                         type: card.type,
                         description: card.desc,
                         color: Colors.blueGrey,
-                        imageUrl: card.card_images.image_url_cropped, // no [0]!
-                        likes: 0,
+                        imageUrl: card.card_images.image_url_cropped,
+                        username: "User123",
                       );
                     }).toList(),
                   ),
-
-
-
               ],
             ),
           ),
         ],
       )
-      :_screens[_currentIndex],
+          : _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex=index;
-          });
-        },
-
+        onTap: (index) => setState(() => _currentIndex = index),
         type: BottomNavigationBarType.fixed,
         backgroundColor: HexColor("#9380D5"),
         elevation: 0,
@@ -237,8 +206,8 @@ class _HomeViewScreenState extends State<HomeView> {
         items: const [
           BottomNavigationBarItem(
               icon: Icon(Icons.home), label: "Home", backgroundColor: Colors.black12),
-           BottomNavigationBarItem(icon: Icon(Icons.collections), label: "My Concepts"),
-           BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: "Create Card"),
+          BottomNavigationBarItem(icon: Icon(Icons.collections), label: "My Concepts"),
+          BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: "Create Card"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
         ],
       ),
@@ -246,55 +215,95 @@ class _HomeViewScreenState extends State<HomeView> {
   }
 }
 
-// Concept Card
-class ConceptCard extends StatelessWidget {
+// Concept Card with Likes
+class ConceptCard extends StatefulWidget {
+  final String cardId;
   final String title, type, description, imageUrl;
-  final int likes;
   final Color color;
-  final String? username; // nullable now
+  final String? username;
 
   const ConceptCard({
+    required this.cardId,
     required this.title,
     required this.type,
     required this.description,
     required this.color,
     required this.imageUrl,
-    this.username ,
-    required this.likes,
+    this.username,
     super.key,
   });
+
+  @override
+  State<ConceptCard> createState() => _ConceptCardState();
+}
+
+class _ConceptCardState extends State<ConceptCard> {
+  int likesCount = 0;
+  bool isLiked = false;
+  final String? userId = FirebaseAuth.instance.currentUser?.uid;
+  final LikesViewModel likesVM = LikesViewModel();
+
+  @override
+  void initState() {
+    super.initState();
+    fetchLikes();
+  }
+
+  void fetchLikes() async {
+    if (widget.cardId.isEmpty) return;
+    LikesModel? likes = await likesVM.getLikes(widget.cardId);
+    setState(() {
+      likesCount = likes?.userIds.length ?? 0;
+      isLiked = userId != null && (likes?.userIds.contains(userId) ?? false);
+    });
+  }
+
+  void toggleLike() async {
+    final uid = userId;
+    if (uid == null) return; // stop if user is not logged in
+
+    if (isLiked) {
+      await likesVM.removeLike(widget.cardId, uid); // uid is non-null here
+      setState(() {
+        isLiked = false;
+        likesCount -= 1;
+      });
+    } else {
+      await likesVM.addLike(widget.cardId, uid); // uid is non-null here
+      setState(() {
+        isLiked = true;
+        likesCount += 1;
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: color,
+        color: widget.color,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         children: [
-          // Header: Title + Type
+          // Header
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(title,
+                Text(widget.title,
                     style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18)),
+                        color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.black45,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Text(
-                    type,
-                    style: const TextStyle(color: Colors.white, fontSize: 12),
-                  ),
+                  child: Text(widget.type, style: const TextStyle(color: Colors.white, fontSize: 12)),
                 )
               ],
             ),
@@ -305,35 +314,30 @@ class ConceptCard extends StatelessWidget {
             height: 150,
             width: double.infinity,
             child: Image.network(
-              imageUrl,            // Already the art URL
+              widget.imageUrl,
               fit: BoxFit.cover,
-              errorBuilder: (c, e, s) =>
-              const Icon(Icons.broken_image, color: Colors.white),
+              errorBuilder: (c, e, s) => const Icon(Icons.broken_image, color: Colors.white),
             ),
           ),
 
           // Description
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(
-              description,
-              style: const TextStyle(color: Colors.white70),
-            ),
+            child: Text(widget.description, style: const TextStyle(color: Colors.white70)),
           ),
 
-          // Footer
+          // Footer: Likes + Username
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
-                Text(username??"", style:  TextStyle(color: Colors.white70)),
+                Text(widget.username ?? "", style: const TextStyle(color: Colors.white70)),
                 const Spacer(),
-                const Icon(Icons.favorite, color: Colors.red, size: 18),
-                const SizedBox(width: 5),
-                Text(likes.toString(), style: const TextStyle(color: Colors.white70)),
-                const SizedBox(width: 8),
-                const Icon(Icons.chat_bubble_rounded, color: Colors.black, size: 18),
-                const SizedBox(width: 4),
+                IconButton(
+                  icon: Icon(isLiked ? Icons.favorite : Icons.favorite_border, color: Colors.red),
+                  onPressed: toggleLike,
+                ),
+                Text(likesCount.toString(), style: const TextStyle(color: Colors.white70)),
               ],
             ),
           ),

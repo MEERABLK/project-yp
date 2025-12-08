@@ -10,3 +10,5 @@ export 'services/api_service.dart';
 export 'widget/card_image.dart';
 export 'views/splashscreens_view.dart';
 export 'services/location.dart';
+export 'view_models/likes_view_model.dart';
+export 'models/likes_model.dart';
