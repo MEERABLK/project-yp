@@ -11,28 +11,34 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewScreenState extends State<ProfileView> {
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn googleSignIn = GoogleSignIn(); // global/shared instance
 
-  void _logout() async {
+  Future<void> logout() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+    );
+
     try {
-      if (await _googleSignIn.isSignedIn()) {
-        await _googleSignIn.signOut();
-        await FirebaseAuth.instance.signOut(); // also sign out of Firebase
+      // Use shared instance to avoid slow creation
+      await Future.wait([
+        googleSignIn.signOut(),
+        FirebaseAuth.instance.signOut(),
+      ]);
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Logged out successfully')),
-        );
+      Navigator.pop(context); // remove loading
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => RegisterScreen()),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('You are not logged in')),
-        );
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Logged out successfully')),
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => RegisterScreen()),
+      );
     } catch (e) {
+      Navigator.pop(context); // remove loading
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error logging out: $e')),
       );
@@ -72,7 +78,7 @@ class _ProfileViewScreenState extends State<ProfileView> {
                   alignment: Alignment.topRight,
                   child: IconButton(
                     icon: const Icon(Icons.logout, color: Colors.white, size: 28),
-                    onPressed: _logout,
+                    onPressed: logout,
                   ),
                 ),
 

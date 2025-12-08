@@ -10,7 +10,7 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final RegisterViewModel viewModel = RegisterViewModel();
-
+  bool isGoogleSelected = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,18 +58,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         child: Row(
                           children: [
                             Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.8),
-                                  borderRadius: BorderRadius.circular(40),
-                                ),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  "Email",
-                                  style: TextStyle(
-                                    fontFamily: 'Iceland',
-                                    color: Colors.white,
-                                    fontSize: 20,
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(40),
+                                onTap: () {
+                                  setState(() {
+                                    isGoogleSelected = false;
+                                  });
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: !isGoogleSelected
+                                        ? Colors.black.withOpacity(0.8)
+                                        : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(40),
+                                  ),
+                                  child: Text(
+                                    "Email",
+                                    style: TextStyle(
+                                      fontFamily: 'Iceland',
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -77,19 +87,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             Expanded(
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(40),
-                                onTap: () async{
-                                  print("Google button clicked");
-                                  // TODO: Navigate or trigger Google Auth
-
-                          bool isLogged = await  login();
-
-                          if(isLogged)
-                            {
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeView()));
-                            }
+                                onTap: () async {
+                                  bool isLogged = await login();
+                                  if (isLogged) {
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) => HomeView()));
+                                  }
                                 },
                                 child: Container(
                                   alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: isGoogleSelected
+                                        ? Colors.black.withOpacity(0.8)
+                                        : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(40),
+                                  ),
                                   child: Text(
                                     "Google",
                                     style: TextStyle(
@@ -259,7 +273,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Future<bool> login() async {
       // Trigger the authentication flow
-
+    setState(() => isGoogleSelected = true);
       final user = await GoogleSignIn().signIn();
 
       // Obtain the auth details from the request
