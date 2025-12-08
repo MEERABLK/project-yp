@@ -1,0 +1,29 @@
+import 'package:geolocator/geolocator.dart';
+
+Future<Position?> getUserLocation() async {
+  bool serviceEnabled;
+  LocationPermission permission;
+
+  // Check if location services are enabled
+  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    return null; // Location services are OFF
+  }
+
+  // Check permission
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      return null; // User denied permissions
+    }
+  }
+
+  if (permission == LocationPermission.deniedForever) {
+    return null; // Permissions permanently denied
+  }
+
+  // Get current location
+  return await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high);
+}

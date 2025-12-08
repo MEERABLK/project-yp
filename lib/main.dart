@@ -23,7 +23,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home:  FirebaseAuth.instance.currentUser != null ? HomeView():RegisterScreen(),
+      // home:  FirebaseAuth.instance.currentUser != null ? HomeView():RegisterScreen(),
+      home: FirebaseAuth.instance.currentUser != null ? HomeView() : OnboardingScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

@@ -8,3 +8,5 @@ export 'models/yugioh_model.dart';
 export  'constants/constants.dart';
 export 'services/api_service.dart';
 export 'widget/card_image.dart';
+export 'views/splashscreens_view.dart';
+export 'services/location.dart';

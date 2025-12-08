@@ -19,6 +19,15 @@ class _HomeViewScreenState extends State<HomeView> {
     ProfileView(),   // profile screen
   ];
 
+  void fetchLocation() async {
+    Position? pos = await getUserLocation();
+
+    if (pos == null) {
+      print("Location unavailable");
+    } else {
+      print("Latitude: ${pos.latitude}, Longitude: ${pos.longitude}");
+    }
+  }
 
   List<YugiohModel> cards = [];
   bool loading = true;
@@ -27,6 +36,8 @@ class _HomeViewScreenState extends State<HomeView> {
   void initState() {
     super.initState();
     fetchCards();
+    fetchLocation();
+
   }
 
   void fetchCards() async {
