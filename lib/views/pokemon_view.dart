@@ -37,7 +37,7 @@ class _APIDEMOState extends State<APIDEMO> {
     List<PokemonModel>? allCards = await ApiService().getPokemon();
     if (allCards != null && allCards.isNotEmpty) {
       setState(() {
-        _pokemonModel = allCards.take(2).toList();
+        _pokemonModel = allCards.take(50).toList();
       });
     }
   }
@@ -54,7 +54,7 @@ class _APIDEMOState extends State<APIDEMO> {
         itemCount: _pokemonModel!.length,
         itemBuilder: (context, index) {
           final card = _pokemonModel![index];
-          final imageUrl = card.poke_images.image_url_cropped; // directly use cropped image
+          final imageUrl = card.image;
           return Card(
             margin: const EdgeInsets.all(10),
             child: Padding(
@@ -68,7 +68,7 @@ class _APIDEMOState extends State<APIDEMO> {
                         fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 10),
-                  Image.network(card.poke_images.image_url_cropped, width: 50),
+                  Image.network(card.image, width: 50),
                   // Image.network(
                   //   imageUrl,
                   //   height: 150,

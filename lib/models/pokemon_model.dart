@@ -1,5 +1,6 @@
 // Import Dart's built-in library for working with JSON data
 import 'dart:convert';
+import 'package:projectyp/dependencies.dart';
 
 
 //step 1
@@ -8,7 +9,7 @@ import 'dart:convert';
 // and then maps each one to a UserModel object using fromJson()
 List<PokemonModel> pokemonModelFromJson(String str) {
   final jsonData = json.decode(str);        // decode JSON string -> Map
-  final List<dynamic> dataList = jsonData["data"]; // extract the "data" array
+  final List<dynamic> dataList = jsonData.values.toList(); // extract the "data" array
   return dataList.map((x) => PokemonModel.fromJson(x)).toList();
 }
 
@@ -27,7 +28,7 @@ class PokemonModel {
     required this.types,
     required this.abilities,
     required this.baseStats,
-    required this.poke_images,
+    required this.image,
   });
   // Fields (properties) for each user
 
@@ -36,56 +37,129 @@ class PokemonModel {
   List<String> types;
   List<String> abilities;
   Map<String,int> baseStats;
-  PokeImages poke_images;
-// String card_images;
+  String image;
+
+  static String normalizePokemonName(String name) {
+    String normalized = _toKebabCase(name);
+
+    normalized = normalized.replaceAll(RegExp(r"['’]|:-|\.|-\.|%"), "");
+
+    const List<Map<String, String>> sections = [
+      // === Gen 1 ===
+      {
+        "rock-star": "rockstar",
+        "pop-star": "popstar",
+        "nidoran-f": "nidoranf",
+        "nidoran-m": "nidoranm",
+        "mr-": "mr",
+      },
+      // === Gen 2 ===
+      {
+        "spiky-eared": "spikyeared",
+        "ho-oh": "hooh",
+      },
+      // === Gen 4 ===
+      {
+        "mime-jr": "mimejr",
+        "porygon-z": "porygonz",
+      },
+      // === Gen 5 ===
+      {
+        "-striped": "striped",
+      },
+      // === Gen 6 ===
+      {
+        "flabébé": "flabebe",
+      },
+      // === Gen 7 ===
+      {
+        "rockruff-dusk": "rockruff",
+        "mo-o": "moo",
+        "pom-pom": "pompom",
+        "tapu-": "tapu",
+        "dusk-mane": "duskmane",
+        "dawn-wings": "dawnwings",
+        "-bond": "-ash",
+      },
+      // === Gen 8 ===
+      {
+        "rapid-strike": "rapidstrike",
+        "low-key": "lowkey",
+        "galar-": "galar",
+      },
+      // === Gen 9 ===
+      {
+        "paldea-": "paldea",
+        "three-segment": "threesegment",
+        "great-tusk": "greattusk",
+        "scream-tail": "screamtail",
+        "brute-bonnet": "brutebonnet",
+        "roaring-moon": "roaringmoon",
+        "flutter-mane": "fluttermane",
+        "slither-wing": "slitherwing",
+        "sandy-shocks": "sandyshocks",
+        "walking-wake": "walkingwake",
+        "gouging-fire": "gougingfire",
+        "raging-bolt": "ragingbolt",
+        "iron-": "iron",
+        "chien-pao": "chienpao",
+        "chi-yu": "chiyu",
+        "ting-lu": "tinglu",
+        "wo-chien": "wochien",
+        "-tera": "tera",
+        "terastal": "-terastal",
+      },
+      // === Other ===
+      {
+        "mega-": "mega",
+        "pokestar-": "pokestar",
+        "-00": "00",
+        "-door": "door",
+        "brycen-": "brycen",
+        "black-belt": "blackbelt",
+      },
+    ];
+
+    // 4. Apply all replacements in order
+    for (final section in sections) {
+      section.forEach((pattern, replacement) {
+        normalized = normalized.replaceAll(pattern, replacement);
+      });
+    }
+
+    return normalized;
+  }
+
+  static String _toKebabCase(String str) {
+    return str
+        .trim()
+        .replaceAll(RegExp(r'([a-z])([A-Z])'), r'$1-$2') // split camelCase
+        .replaceAll(RegExp(r'\s+'), '-') // spaces to hyphens
+        .replaceAll(RegExp(r'_+'), '-') // underscores to hyphens
+        .toLowerCase();
+  }
 
   //step 3
   // Converts a Map<String, dynamic> (decoded JSON) into a UserModel object
   // Uses other model classes (Address, Company) to decode nested JSON fields
   factory PokemonModel.fromJson(Map<String, dynamic> json) => PokemonModel(
-    id: json["id"],
-    name: json["name"],
-    types: json["types"],
-    abilities: json["abilities"],
-    baseStats: json["baseStats"],
-      // poke_images: json["poke_images"]
-    // poke_images: PokeImages.fromJson(json["poke_images"]),
-    poke_images: (json["poke_images"] != null && json["poke_images"].isNotEmpty)
-        ? PokeImages.fromJson(json["poke_images"][0]) // first (and only) image
-        : PokeImages(image_url_cropped: ""), // fallback
+    id: json["num"] ?? 0,
+    name: json["name"] ?? '',
+    types: List<String>.from(json["types"] ?? []),
+    abilities: Map<String,String>.from(json["abilities"] ?? {}).values.toList(),
+    baseStats: Map<String,int>.from(json["baseStats"] ?? {}),
+    image: "https://play.pokemonshowdown.com/sprites/gen5/" + normalizePokemonName(json["name"] ?? 'missingno') + ".png"
   );
 
   //step 4
   // Converts the UserModel object back into a JSON compatible Map.
   // Useful for sending data to APIs.
   Map<String, dynamic> toJson() => {
-    "id": id,
+    "num": id,
     "name": name,
     "types": types,
     "abilities": abilities,
     "baseStats": baseStats,
-     "card_images": poke_images.toJson(),
+    "image": image,
   };
 }
-
-class PokeImages {
-  PokeImages({
-    required this.image_url_cropped,
-
-  });
-
-  String image_url_cropped;
-
-
-  factory PokeImages.fromJson(Map<String, dynamic> json) => PokeImages(
-
-    image_url_cropped: json["image_url_cropped"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "image_url_cropped": image_url_cropped,
-
-  };
-}
-
-

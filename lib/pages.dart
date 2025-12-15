@@ -9,6 +9,7 @@ export 'views/home_view.dart';
 export 'views/login_view.dart';
 export 'views/profile_view.dart';
 export 'views/register_view.dart';
+export 'views/create_view.dart';
 export 'view_models/register_view_model.dart';
 export 'services/api_service.dart';
 export 'widget/card_image.dart';
