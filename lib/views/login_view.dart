@@ -11,29 +11,32 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   CollectionReference users = FirebaseFirestore.instance.collection('Users');
 
-  String name = '';
+  String email = '';
   String password = '';
 
   bool isGoogleSelected = false; // track which button is selected
 
   Future<void> loginWithEmail() async {
-    if (name.isEmpty || password.isEmpty) {
+    if (email.isEmpty || password.isEmpty) {
       showMsg("Please fill all fields");
       return;
     }
 
-    QuerySnapshot query = await users
-        .where('name', isEqualTo: name)
-        .where('password', isEqualTo: password)
-        .get();
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
-    if (query.docs.isNotEmpty) {
-      showMsg("Login Successful!");
-      Navigator.push(context, MaterialPageRoute(builder: (_) => HomeView()));
-    } else {
-      showMsg("Invalid Username or Password");
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => HomeView()),
+      );
+    } catch (e) {
+      showMsg("Invalid email or password");
     }
   }
+
 
   Future<bool> loginWithGoogle() async {
     setState(() => isGoogleSelected = true); // toggle button colors
@@ -174,7 +177,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Username",
+                          "Email",
                           style: TextStyle(
                             fontFamily: "Iceland",
                             color: Colors.white,
@@ -184,9 +187,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       TextField(
                         style: TextStyle(color: Colors.white),
-                        onChanged: (value) => name = value,
+                        onChanged: (value) => email = value,
                         decoration: InputDecoration(
-                          hintText: 'cardmaster23',
+                          hintText: 'cardmaster23@gmail.com',
                           hintStyle: TextStyle(color: HexColor("#464951")),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(14),

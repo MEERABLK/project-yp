@@ -11,6 +11,8 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final RegisterViewModel viewModel = RegisterViewModel();
   bool isGoogleSelected = false;
+  String passwordWarning = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -187,16 +189,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       ),
                       TextField(
-                        style: TextStyle(color: Colors.white),
                         obscureText: true,
-                        onChanged: (value) => viewModel.password = value,
+                        onChanged: (value) {
+                          viewModel.password = value;
+                          if (!viewModel.isPasswordStrong(value)) {
+                            // Show warning immediately
+                            setState(() => passwordWarning = "Password must be 8+ chars");
+                          } else {
+                            setState(() => passwordWarning = "");
+                          }
+                        },
                         decoration: InputDecoration(
                           hintText: '...................',
-                          hintStyle: TextStyle(color: HexColor("#464951")),
-
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
+                          errorText: passwordWarning.isEmpty ? null : passwordWarning,
                         ),
                       ),
 
