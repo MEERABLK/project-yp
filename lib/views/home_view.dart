@@ -39,7 +39,7 @@ class _HomeViewScreenState extends State<HomeView> {
   }
 
   void fetchCards() async {
-    List<YugiohModel>? data = await ApiService().getUsers();
+    List<YugiohModel>? data = await ApiService().getYugioh();
     if (data != null && data.isNotEmpty) {
       setState(() {
         cards = data.take(2).toList();

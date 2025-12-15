@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projectyp/models/yugioh_model.dart';
+import 'package:projectyp/models/pokemon_model.dart';
 import 'package:projectyp/pages.dart';
 
 void main() {
@@ -25,7 +25,7 @@ class APIDEMO extends StatefulWidget {
 }
 
 class _APIDEMOState extends State<APIDEMO> {
-  List<YugiohModel>? _userModel = [];
+  List<PokemonModel>? _pokemonModel = [];
 
   @override
   void initState() {
@@ -34,10 +34,10 @@ class _APIDEMOState extends State<APIDEMO> {
   }
 
   void _getData() async {
-    List<YugiohModel>? allCards = await ApiService().getYugioh();
+    List<PokemonModel>? allCards = await ApiService().getPokemon();
     if (allCards != null && allCards.isNotEmpty) {
       setState(() {
-        _userModel = allCards.take(2).toList();
+        _pokemonModel = allCards.take(2).toList();
       });
     }
   }
@@ -48,13 +48,13 @@ class _APIDEMOState extends State<APIDEMO> {
       appBar: AppBar(
         title: Text('Listing Cards from REST API'),
       ),
-      body: _userModel == null || _userModel!.isEmpty
+      body: _pokemonModel == null || _pokemonModel!.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
-        itemCount: _userModel!.length,
+        itemCount: _pokemonModel!.length,
         itemBuilder: (context, index) {
-          final card = _userModel![index];
-          final imageUrl = card.card_images.image_url_cropped; // directly use cropped image
+          final card = _pokemonModel![index];
+          final imageUrl = card.poke_images.image_url_cropped; // directly use cropped image
           return Card(
             margin: const EdgeInsets.all(10),
             child: Padding(
@@ -68,16 +68,26 @@ class _APIDEMOState extends State<APIDEMO> {
                         fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 10),
-                  Image.network(card.card_images.image_url_cropped, width: 50),
+                  Image.network(card.poke_images.image_url_cropped, width: 50),
                   // Image.network(
                   //   imageUrl,
                   //   height: 150,
                   //   fit: BoxFit.contain,
                   // ),
                   const SizedBox(height: 10),
-                  Text("Type: ${card.type}"),
+                  Text("Types: ${card.types.join('/')}"),
                   const SizedBox(height: 5),
-                  Text("Description: ${card.desc}"),
+                  Text("Abilities:\n${card.abilities.join('\n- ')}"),
+                  const SizedBox(height: 5),
+                  Text("Stats:"),
+                  Text("""
+                  HP: ${card.baseStats['hp']}
+                  Attack: ${card.baseStats['atk']}
+                  Defense: ${card.baseStats['def']}
+                  Sp. Attack: ${card.baseStats['spa']}
+                  Sp. Defense: ${card.baseStats['spd']}
+                  Speed: ${card.baseStats['spe']}
+                  """),
                 ],
               ),
             ),
