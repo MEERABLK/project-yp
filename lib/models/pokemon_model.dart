@@ -148,7 +148,7 @@ class PokemonModel {
     types: List<String>.from(json["types"] ?? []),
     abilities: Map<String,String>.from(json["abilities"] ?? {}).values.toList(),
     baseStats: Map<String,int>.from(json["baseStats"] ?? {}),
-    image: "https://play.pokemonshowdown.com/sprites/gen5/" + normalizePokemonName(json["name"] ?? 'missingno') + ".png"
+    image: json["image"] ?? "https://play.pokemonshowdown.com/sprites/gen5/" + normalizePokemonName(json["name"] ?? 'missingno') + ".png"
   );
 
   //step 4
