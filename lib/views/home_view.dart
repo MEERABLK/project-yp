@@ -23,7 +23,7 @@ class _HomeViewScreenState extends State<HomeView> {
   final List<Widget> _screens = [
     Container(),
     Placeholder(),
-    Placeholder(),
+    CreateView(),
     ProfileView(),
   ];
 

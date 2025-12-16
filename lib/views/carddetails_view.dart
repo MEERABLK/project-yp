@@ -24,6 +24,7 @@ class _CardDetailsViewState extends State<CardDetailsView> {
 
   final CommentsViewModel commentsVM = CommentsViewModel();
   final TextEditingController commentController = TextEditingController();
+
   List<CommentItem> comments = [];
 
   final String? userId = FirebaseAuth.instance.currentUser?.uid;
@@ -375,6 +376,8 @@ class _CardDetailsViewState extends State<CardDetailsView> {
                                 ),
                               ),
                             ),
+
+                            // comment iconbutton
                             IconButton(
                               icon: const Icon(Icons.send, color: Colors.purpleAccent),
                               onPressed: submitComment,

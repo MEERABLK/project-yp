@@ -1,8 +1,9 @@
 import '../dependencies.dart';
 import '../pages.dart';
+
 // function: UI of the register screen with alert handling
 class RegisterScreen extends StatefulWidget {
-  RegisterScreen({super.key});
+  const RegisterScreen({super.key});
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -16,293 +17,272 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: HexColor("#0F2F4E"),
-      ),
+      appBar: AppBar(backgroundColor: HexColor("#0F2F4E")),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              HexColor("#0F2F4E"),
-              HexColor("#9380D5"),
-            ],
+            colors: [HexColor("#0F2F4E"), HexColor("#9380D5")],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
         ),
-        child: Column(
-          children: [
-            Image.asset(
-              'assets/logo.png',
-              width: 300,
-              height: 200,
-            ),
 
-            Padding(
-              padding: const EdgeInsets.only(),
-              child: Center(
-                child: Container(
-                  width: 400,
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.68),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: HexColor("#292A30").withOpacity(0.44),
-                          borderRadius: BorderRadius.circular(40),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(40),
-                                onTap: () {
-                                  setState(() {
-                                    isGoogleSelected = false;
-                                  });
-                                },
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: !isGoogleSelected
-                                        ? Colors.black.withOpacity(0.8)
-                                        : Colors.transparent,
-                                    borderRadius: BorderRadius.circular(40),
-                                  ),
-                                  child: Text(
-                                    "Email",
-                                    style: TextStyle(
-                                      fontFamily: 'Iceland',
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(40),
-                                onTap: () async {
-                                  bool isLogged = await login();
-                                  if (isLogged) {
-                                    Navigator.pushReplacement(
-                                        context,
-                                            MaterialPageRoute(builder: (_) => const MainShell()));
-                                  }
-                                },
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: isGoogleSelected
-                                        ? Colors.black.withOpacity(0.8)
-                                        : Colors.transparent,
-                                    borderRadius: BorderRadius.circular(40),
-                                  ),
-                                  child: Text(
-                                    "Google",
-                                    style: TextStyle(
-                                      fontFamily: 'Iceland',
-                                      color: Colors.white60,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 420),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset('assets/logo.png', width: 300, height: 200),
 
-                          ],
-                        ),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.68),
+                        borderRadius: BorderRadius.circular(5),
                       ),
-
-                      const SizedBox(height: 15),
-
-                      Text(
-                        "Create your legendary collection",
-                        style:
-                        TextStyle(color: Colors.white, fontFamily: 'Iceland'),
-                      ),
-
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Username",
-                          style: TextStyle(
-                            fontFamily: "Iceland",
-                            color: Colors.white,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-                      TextField(
-                        style: TextStyle(color: Colors.white),
-                        onChanged: (value) => viewModel.name = value,
-                        decoration: InputDecoration(
-                          hintText: 'cardmaster23',
-                          hintStyle: TextStyle(color: HexColor("#464951")),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                      ),
-
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Email",
-                          style: TextStyle(
-                            fontFamily: "Iceland",
-                            color: Colors.white,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-                      TextField(
-                        style: TextStyle(color: Colors.white),
-                        onChanged: (value) => viewModel.email = value,
-                        decoration: InputDecoration(
-                          hintText: 'your@email.com',
-                          hintStyle: TextStyle(color: HexColor("#464951")),
-
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                      ),
-
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Password",
-                          style: TextStyle(
-                            fontFamily: "Iceland",
-                            color: Colors.white,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-                      TextField(
-                        obscureText: true,
-                        onChanged: (value) {
-                          viewModel.password = value;
-                          if (!viewModel.isPasswordStrong(value)) {
-                            // Show warning immediately
-                            setState(() => passwordWarning = "Password must be 8+ chars");
-                          } else {
-                            setState(() => passwordWarning = "");
-                          }
-                        },
-                        decoration: InputDecoration(
-                          hintText: '...................',
-                          errorText: passwordWarning.isEmpty ? null : passwordWarning,
-                        ),
-                      ),
-
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Confirm Password",
-                          style: TextStyle(
-                            fontFamily: "Iceland",
-                            color: Colors.white,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-                      TextField(
-                        style: TextStyle(color: Colors.white),
-                        obscureText: true,
-                        onChanged: (value) => viewModel.confirmPassword = value,
-                        decoration: InputDecoration(
-                          hintText: '...................',
-                          hintStyle: TextStyle(color: HexColor("#464951")),
-
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: 20),
-
-                      Row(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(backgroundColor: HexColor("#9380D5")),
-                            onPressed: handleRegister,
-                            child: Text('Create Account',style: TextStyle(color: Colors.white),),
-                          ),
-                          Spacer(),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(backgroundColor: HexColor("#DACFFF")),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => LoginScreen(),
+                          Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: HexColor("#292A30").withOpacity(0.44),
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(40),
+                                    onTap: () => setState(() => isGoogleSelected = false),
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      padding: const EdgeInsets.symmetric(vertical: 10),
+                                      decoration: BoxDecoration(
+                                        color: !isGoogleSelected
+                                            ? Colors.black.withOpacity(0.8)
+                                            : Colors.transparent,
+                                        borderRadius: BorderRadius.circular(40),
+                                      ),
+                                      child: const Text(
+                                        "Email",
+                                        style: TextStyle(
+                                          fontFamily: 'Iceland',
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              );
+                                Expanded(
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(40),
+                                    onTap: () async {
+                                      setState(() => isGoogleSelected = true);
+
+                                      final bool isLogged = await login();
+                                      if (!mounted) return;
+
+                                      if (isLogged) {
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(builder: (_) => const MainShell()),
+                                        );
+                                      } else {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(content: Text("Google sign-in cancelled/failed.")),
+                                        );
+                                      }
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      padding: const EdgeInsets.symmetric(vertical: 10),
+                                      decoration: BoxDecoration(
+                                        color: isGoogleSelected
+                                            ? Colors.black.withOpacity(0.8)
+                                            : Colors.transparent,
+                                        borderRadius: BorderRadius.circular(40),
+                                      ),
+                                      child: const Text(
+                                        "Google",
+                                        style: TextStyle(
+                                          fontFamily: 'Iceland',
+                                          color: Colors.white60,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(height: 15),
+
+                          const Text(
+                            "Create your legendary collection",
+                            style: TextStyle(color: Colors.white, fontFamily: 'Iceland'),
+                          ),
+
+                          const SizedBox(height: 12),
+
+                          _label("Username"),
+                          TextField(
+                            style: const TextStyle(color: Colors.white),
+                            onChanged: (value) => viewModel.name = value,
+                            decoration: InputDecoration(
+                              hintText: 'cardmaster23',
+                              hintStyle: TextStyle(color: HexColor("#464951")),
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                            ),
+                          ),
+
+                          const SizedBox(height: 12),
+
+                          _label("Email"),
+                          TextField(
+                            style: const TextStyle(color: Colors.white),
+                            onChanged: (value) => viewModel.email = value,
+                            decoration: InputDecoration(
+                              hintText: 'your@email.com',
+                              hintStyle: TextStyle(color: HexColor("#464951")),
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                            ),
+                          ),
+
+                          const SizedBox(height: 12),
+
+                          _label("Password"),
+                          TextField(
+                            style: const TextStyle(color: Colors.white),
+                            obscureText: true,
+                            onChanged: (value) {
+                              viewModel.password = value;
+                              setState(() {
+                                passwordWarning = viewModel.isPasswordStrong(value)
+                                    ? ""
+                                    : "Password must be 8+ chars";
+                              });
                             },
-                            child: Text('Login',style: TextStyle(color: HexColor("#7C59A7"))),
+                            decoration: InputDecoration(
+                              hintText: '...................',
+                              hintStyle: TextStyle(color: HexColor("#464951")),
+                              errorText: passwordWarning.isEmpty ? null : passwordWarning,
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                            ),
+                          ),
+
+                          const SizedBox(height: 12),
+
+                          _label("Confirm Password"),
+                          TextField(
+                            style: const TextStyle(color: Colors.white),
+                            obscureText: true,
+                            onChanged: (value) => viewModel.confirmPassword = value,
+                            decoration: InputDecoration(
+                              hintText: '...................',
+                              hintStyle: TextStyle(color: HexColor("#464951")),
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                            ),
+                          ),
+
+                          const SizedBox(height: 20),
+
+                          Row(
+                            children: [
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: HexColor("#9380D5"),
+                                ),
+                                onPressed: handleRegister,
+                                child: const Text(
+                                  'Create Account',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                              const Spacer(),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: HexColor("#DACFFF"),
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (_) => LoginScreen()),
+                                  );
+                                },
+                                child: Text(
+                                  'Login',
+                                  style: TextStyle(color: HexColor("#7C59A7")),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
   }
 
-//   Future <bool> login() async
-//   {
-//    final user = await GoogleSignIn;
-//    GoogleSignInAuthentication userAuth = await user!.authentication;
-// var credential = GoogleAuthProvider.credential(idToken: userAuth.idToken,accessToken:userAuth.accessToken);
-//
-//  await FirebaseAuth.instance.signInWithCredential(credential);
-//  return FirebaseAuth.instance.currentUser !=null ;
-//   }
-
+  Widget _label(String text) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontFamily: "Iceland",
+          color: Colors.white,
+          fontSize: 18,
+        ),
+      ),
+    );
+  }
 
   Future<bool> login() async {
-      // Trigger the authentication flow
-    setState(() => isGoogleSelected = true);
+    try {
       final user = await GoogleSignIn().signIn();
+      if (user == null) return false; // user cancelled
 
-      // Obtain the auth details from the request
-       GoogleSignInAuthentication userAuth = await user!.authentication;
+      final userAuth = await user.authentication;
 
-      // Create a new credential
-      var credential = GoogleAuthProvider.credential(
+      final credential = GoogleAuthProvider.credential(
         idToken: userAuth.idToken,
         accessToken: userAuth.accessToken,
       );
 
-      // Once signed in, return the UserCredential
-       await FirebaseAuth.instance.signInWithCredential(credential);
-       return FirebaseAuth.instance.currentUser != null;
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      return FirebaseAuth.instance.currentUser != null;
+    } catch (_) {
+      return false;
+    }
   }
+
   Future<void> handleRegister() async {
-    String result = await viewModel.registerUser();
+    final result = await viewModel.registerUser();
+    if (!mounted) return;
 
     if (result == "success") {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("You have successfully created an account!")),
+        const SnackBar(content: Text("You have successfully created an account!")),
       );
-      Navigator.push(
+
+      Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => LoginScreen()),
+        MaterialPageRoute(builder: (_) => LoginScreen()),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

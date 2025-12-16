@@ -5,7 +5,8 @@ import 'package:projectyp/dependencies.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
-class LikesViewModel {
+class LikesViewModel
+{
   final CollectionReference likesCollection =
   FirebaseFirestore.instance.collection('Likes');
 

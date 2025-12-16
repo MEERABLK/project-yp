@@ -68,7 +68,13 @@ class _LoginScreenState extends State<LoginScreen> {
         backgroundColor: HexColor("#0F2F4E"),
         automaticallyImplyLeading: false,
       ),
-      body: Container(
+      body: SafeArea(
+    child: SingleChildScrollView(
+    child: Center(
+
+    child: Column(
+    children: [
+      Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [HexColor("#0F2F4E"), HexColor("#9380D5")],
@@ -257,6 +263,11 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ],
         ),
+      ),
+      ],
+    ),
+    ),
+    ),
       ),
     );
   }

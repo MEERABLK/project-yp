@@ -28,6 +28,7 @@ class _CreateViewState extends State<CreateView> {
   final TextEditingController _idController = TextEditingController();
   // 2. Simplified to a single controller for Ability "0"
   final TextEditingController _abilityController = TextEditingController();
+  final TextEditingController _imageController = TextEditingController();
 
   // Types
   final List<String> _pokemonTypes = [
@@ -46,6 +47,8 @@ class _CreateViewState extends State<CreateView> {
     _nameController.dispose();
     _idController.dispose();
     _abilityController.dispose();
+    _imageController.dispose();
+
     super.dispose();
   }
 
@@ -61,12 +64,12 @@ class _CreateViewState extends State<CreateView> {
         final pokemonData = {
           'id': int.parse(_idController.text),
           'name': _nameController.text,
-          // 3. Abilities Map: Only maps key "0" now
+          'image': _imageController.text.trim(),
           'abilities': {
             '0': _abilityController.text,
           },
           'types': typesArray,
-          'stats': {
+          'baseStats': {
             'hp': _hp.round(),
             'atk': _atk.round(),
             'def': _def.round(),
@@ -76,12 +79,15 @@ class _CreateViewState extends State<CreateView> {
           },
         };
 
+
         await FirebaseFirestore.instance.collection('PokemonCards').add(pokemonData);
 
         // Reset UI
         _nameController.clear();
         _idController.clear();
         _abilityController.clear();
+        _imageController.clear();
+
         setState(() {
           _type1 = null;
           _type2 = null;
@@ -104,8 +110,19 @@ class _CreateViewState extends State<CreateView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Create New Pokemon')),
-      body: Form(
+      body:
+      Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [HexColor("#0F2F4E"), HexColor("#9380D5")],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+      child:
+      Form(
         key: _formKey,
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
@@ -120,8 +137,11 @@ class _CreateViewState extends State<CreateView> {
                     child: TextFormField(
                       controller: _idController,
                       keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(labelText: 'ID #'),
+                      decoration:  InputDecoration(labelText: 'ID #',labelStyle:TextStyle(color: Colors.white),
+                        hintStyle: TextStyle(color: HexColor("#464951")),
+                      ),
                       validator: (val) => val!.isEmpty ? 'Req' : null,
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -129,7 +149,10 @@ class _CreateViewState extends State<CreateView> {
                     flex: 2,
                     child: TextFormField(
                       controller: _nameController,
-                      decoration: const InputDecoration(labelText: 'Name'),
+                      decoration:  InputDecoration(labelText: 'Name',labelStyle:TextStyle(color: Colors.white),
+                          hintStyle: TextStyle(color: HexColor("#464951")),
+                  ),
+                      style: TextStyle(color: Colors.white),
                       validator: (val) => val!.isEmpty ? 'Req' : null,
                     ),
                   ),
@@ -144,7 +167,7 @@ class _CreateViewState extends State<CreateView> {
                   Expanded(
                     child: DropdownButtonFormField<String>(
                       value: _type1,
-                      hint: const Text("Primary"),
+                      hint: const Text("Primary", style: const TextStyle(color: Colors.white),),
                       items: _pokemonTypes.map((t) => DropdownMenuItem(value: t, child: Text(t))).toList(),
                       onChanged: (v) => setState(() => _type1 = v),
                       validator: (val) => val == null ? 'Required' : null,
@@ -154,7 +177,7 @@ class _CreateViewState extends State<CreateView> {
                   Expanded(
                     child: DropdownButtonFormField<String>(
                       value: _type2,
-                      hint: const Text("Secondary"),
+                      hint: const Text("Secondary", style: const TextStyle(color: Colors.white),),
                       items: _pokemonTypes.map((t) => DropdownMenuItem(value: t, child: Text(t))).toList(),
                       onChanged: (v) => setState(() => _type2 = v),
                     ),
@@ -168,15 +191,33 @@ class _CreateViewState extends State<CreateView> {
               // 4. Single Ability Input hooked to "0" logic
               TextFormField(
                 controller: _abilityController,
+                style: TextStyle(color: Colors.white),
                 decoration: const InputDecoration(
                   labelText: 'Primary Ability',
                   border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.flash_on),
+                  prefixIcon: Icon(Icons.flash_on, color: Colors.white,),
                 ),
                 validator: (val) => val!.isEmpty ? 'Required' : null,
               ),
-              const SizedBox(height: 24),
-
+              const SizedBox(height: 16),
+              const SectionHeader(title: "Image"),
+              TextFormField(
+                controller: _imageController,
+                decoration: const InputDecoration(
+                  labelText: "Image URL (web link)",labelStyle:TextStyle(color: Colors.white),
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.image, color: Colors.white,),
+                ),
+                validator: (val) {
+                  if (val == null || val.trim().isEmpty) return 'Required';
+                  final uri = Uri.tryParse(val.trim());
+                  if (uri == null || !uri.hasAbsolutePath || !(uri.scheme == 'http' || uri.scheme == 'https')) {
+                    return 'Enter a valid http/https URL';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 16,),
               // --- Stats ---
               const SectionHeader(title: "Base Stats"),
               StatRow(label: "HP", value: _hp, onChanged: (v) => setState(() => _hp = v)),
@@ -193,15 +234,16 @@ class _CreateViewState extends State<CreateView> {
                   onPressed: _submitData,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16),
-                    backgroundColor: Colors.blueAccent,
+                    backgroundColor:  HexColor("#7C59A7"),
                     foregroundColor: Colors.white,
                   ),
-                  child: const Text('Save Data'),
+                  child: const Text('Save Data', style: const TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
                 ),
               ),
             ],
           ),
         ),
+      ),
       ),
     );
   }
@@ -218,7 +260,7 @@ class SectionHeader extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Text(
         title,
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey[800]),
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
       ),
     );
   }
@@ -270,7 +312,7 @@ class _StatRowState extends State<StatRow> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(width: 60, child: Text(widget.label, style: const TextStyle(fontWeight: FontWeight.w500))),
+        SizedBox(width: 60, child: Text(widget.label, style: const TextStyle(fontWeight: FontWeight.w500, color: Colors.white))),
         Expanded(
           child: Slider(
             value: widget.value,
@@ -283,10 +325,13 @@ class _StatRowState extends State<StatRow> {
         SizedBox(
           width: 50,
           child: TextField(
+            style: const TextStyle(color: Colors.white),
             controller: _ctrl,
             keyboardType: TextInputType.number,
             textAlign: TextAlign.center,
-            decoration: const InputDecoration(isDense: true, contentPadding: EdgeInsets.all(4)),
+            decoration:  InputDecoration(isDense: true, contentPadding: EdgeInsets.all(4),
+              hintStyle: TextStyle(color: HexColor("#464951")),
+            ),
             onChanged: (val) {
               final n = double.tryParse(val);
               if (n != null && n >= 0 && n <= 255) {

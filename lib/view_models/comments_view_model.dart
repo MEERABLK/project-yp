@@ -14,6 +14,7 @@ class CommentsViewModel {
     if (!doc.exists) return [];
 
     final data = doc.data() as Map<String, dynamic>;
+    // create object array toholdthe comments the name will be item
     final List items = data['items'] ?? [];
 
     return items.map((e) => CommentItem.fromMap(e)).toList();
@@ -22,14 +23,18 @@ class CommentsViewModel {
   Future<void> addComment(String cardId,
       CommentItem comment,) async {
     await commentsCollection.doc(cardId).set({
+      // have array item to hold the fields of comments
       'items': FieldValue.arrayUnion([comment.toMap()])
-    }, SetOptions(merge: true));
+    },
+        SetOptions(merge: true));
   }
 
   Future<void> deleteComment(String cardId, CommentItem comment) async {
     await commentsCollection.doc(cardId).set({
       'items': FieldValue.arrayRemove([comment.toMap()])
-    }, SetOptions(merge: true));
+    },
+        // have the comments remove as array becuse one can add  many comments
+        SetOptions(merge: true));
   }
 
 
@@ -38,14 +43,15 @@ Future<void> updateComment(
     String cardId,
     CommentItem oldComment,
     String newText,
-    ) async {
+    ) async
+{
   final updated = CommentItem(
     userId: oldComment.userId,
     username: oldComment.username,
     text: newText,
     createdAt: oldComment.createdAt,
   );
-
+  // remove old comment before adding the next
   await commentsCollection.doc(cardId).set({
     'items': FieldValue.arrayRemove([oldComment.toMap()])
   }, SetOptions(merge: true));
@@ -54,4 +60,6 @@ Future<void> updateComment(
     'items': FieldValue.arrayUnion([updated.toMap()])
   }, SetOptions(merge: true));
 }
+
+
   }

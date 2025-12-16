@@ -18,6 +18,7 @@ class CommentItem {
       'userId': userId,
       'username': username,
       'text': text,
+      // string time conversion
       'createdAt': createdAt.toIso8601String(),
     };
   }

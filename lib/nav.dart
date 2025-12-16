@@ -19,7 +19,7 @@ class _MainShellState extends State<MainShell> {
     final tabs = [
       HomeView(),
       const Placeholder(),
-      const Placeholder(),
+      const CreateView(),
       const ProfileView(),
     ];
 
