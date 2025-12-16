@@ -43,6 +43,8 @@ dependencies:
   google_sign_in: ^6.1.0
   shared_preferences: any
   geolocator: any
+  share_plus: any
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

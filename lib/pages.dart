@@ -16,3 +16,5 @@ export 'widget/card_image.dart';
 export 'views/splashscreens_view.dart';
 export 'services/location.dart';
 export 'view_models/likes_view_model.dart';
+export 'views/carddetails_view.dart';
+export 'nav.dart';

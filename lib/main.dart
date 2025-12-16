@@ -16,7 +16,7 @@ void main() async {
           projectId: "project-yp-55c23"));
   runApp(MaterialApp(
     // home:  FirebaseAuth.instance.currentUser != null ? HomeView():RegisterScreen(),
-    home: FirebaseAuth.instance.currentUser != null ? HomeView() : OnboardingScreen(),
+    home: FirebaseAuth.instance.currentUser != null  ? const MainShell()  : OnboardingScreen(),
     debugShowCheckedModeBanner: false,
   ));
 }

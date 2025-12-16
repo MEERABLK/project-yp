@@ -94,8 +94,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   if (isLogged) {
                                     Navigator.pushReplacement(
                                         context,
-                                        MaterialPageRoute(
-                                            builder: (_) => HomeView()));
+                                            MaterialPageRoute(builder: (_) => const MainShell()));
                                   }
                                 },
                                 child: Container(

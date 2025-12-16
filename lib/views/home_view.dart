@@ -3,8 +3,9 @@ import 'package:projectyp/pages.dart';
 
 
 class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+  final void Function(PokemonModel pokemon) onOpenPokemon;
 
+  const HomeView({super.key, required this.onOpenPokemon});
   @override
   State<HomeView> createState() => _HomeViewScreenState();
 }
@@ -32,6 +33,11 @@ class _HomeViewScreenState extends State<HomeView> {
     fetchCards();
     fetchPokemonCards();
     fetchLocation();
+  }
+  void _goToProfile() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const ProfileView()),
+    );
   }
 
   void fetchLocation() async {
@@ -164,7 +170,11 @@ class _HomeViewScreenState extends State<HomeView> {
                 else
                   Column(
                     children: [
-                      ...filteredPokemon.map((p) => PokemonConceptCard(pokemon: p)),
+                      ...filteredPokemon.map((p) => GestureDetector(
+                        onTap: () => widget.onOpenPokemon(p),
+
+                        child: PokemonConceptCard(pokemon: p),
+                      )),
                       ...filteredYugioh.map((c) => ConceptCard(
                         cardId: (c.id ?? c.name).toString(),
                         title: c.name,
@@ -182,21 +192,21 @@ class _HomeViewScreenState extends State<HomeView> {
         ],
       )
             : _screens[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: HexColor("#9380D5"),
-        elevation: 0,
-        unselectedItemColor: Colors.white,
-        selectedItemColor: Colors.white,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.collections), label: "My Concepts"),
-          BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: "Create Card"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
-        ],
-      ),
+      // bottomNavigationBar: BottomNavigationBar(
+      //   currentIndex: _currentIndex,
+      //   onTap: (index) => setState(() => _currentIndex = index),
+      //   type: BottomNavigationBarType.fixed,
+      //   backgroundColor: HexColor("#9380D5"),
+      //   elevation: 0,
+      //   unselectedItemColor: Colors.white,
+      //   selectedItemColor: Colors.white,
+      //   items: const [
+      //     BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+      //     BottomNavigationBarItem(icon: Icon(Icons.collections), label: "My Concepts"),
+      //     BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: "Create Card"),
+      //     BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
+      //   ],
+      // ),
     );
   }
 

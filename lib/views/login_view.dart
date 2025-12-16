@@ -30,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => HomeView()),
+        MaterialPageRoute(builder: (_) => const MainShell()),
       );
     } catch (e) {
       showMsg("Invalid email or password");
@@ -135,11 +135,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 onTap: () async {
                                   bool isLogged = await loginWithGoogle();
                                   if (isLogged) {
+
                                     Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (_) => HomeView()));
-                                  }
+                                      context,
+                                      MaterialPageRoute(builder: (_) => const MainShell()),
+                                    );
+
+                                        }
                                 },
                                 child: Container(
                                   alignment: Alignment.center,
