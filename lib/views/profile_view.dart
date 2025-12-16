@@ -10,7 +10,7 @@ class ProfileView extends StatefulWidget {
 
 class _ProfileViewScreenState extends State<ProfileView> {
   final GoogleSignIn googleSignIn = GoogleSignIn(); // global/shared instance
-  final String? userEmail = FirebaseAuth.instance.currentUser?.email;
+  final userEmail = FirebaseAuth.instance.currentUser?.email ?? "No email";
 
   Future<void> logout() async {
     showDialog(
@@ -104,13 +104,10 @@ class _ProfileViewScreenState extends State<ProfileView> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'User83852098467',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        userEmail,
+                        style: const TextStyle(color: Colors.white70),
                       ),
+
                     ),
                     IconButton(
                       icon: const Icon(Icons.settings, color: Colors.white),
