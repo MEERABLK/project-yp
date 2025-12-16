@@ -3,9 +3,9 @@ import 'package:projectyp/pages.dart';
 
 
 class HomeView extends StatefulWidget {
-  final void Function(PokemonModel pokemon) onOpenPokemon;
 
-  const HomeView({super.key, required this.onOpenPokemon});
+
+  const HomeView({super.key});
   @override
   State<HomeView> createState() => _HomeViewScreenState();
 }
@@ -171,7 +171,6 @@ class _HomeViewScreenState extends State<HomeView> {
                   Column(
                     children: [
                       ...filteredPokemon.map((p) => GestureDetector(
-                        onTap: () => widget.onOpenPokemon(p),
 
                         child: PokemonConceptCard(pokemon: p),
                       )),
@@ -261,7 +260,8 @@ class _PokemonConceptCardState extends State<PokemonConceptCard> {
 
   void fetchLikes() async {
     if (widget.pokemon.name.isEmpty) return;
-    LikesModel? likes = await likesVM.getLikes(widget.pokemon.name); // use unique id
+    LikesModel? likes = await likesVM.getLikes(
+        widget.pokemon.name); // use unique id
     setState(() {
       likesCount = likes?.userIds.length ?? 0;
       isLiked = userId != null && (likes?.userIds.contains(userId) ?? false);
@@ -289,87 +289,101 @@ class _PokemonConceptCardState extends State<PokemonConceptCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        color: Colors.yellow.shade700,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(color: Colors.black26, blurRadius: 4),
-        ],
-
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Name & Types
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  widget.pokemon.name,
-                  style: const TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) =>
+                CardDetailsView(
+                  pokemon: widget.pokemon,
                 ),
-                Text(
-                  widget.pokemon.types.join(', '),
-                  style: const TextStyle(color: Colors.black87),
-                ),
-              ],
-            ),
           ),
-
-          // Image
-          Container(
-            height: 150,
-            width: double.infinity,
-            color: Colors.yellow.shade100,
-            child: Image.network(
-              widget.pokemon.image,
-              fit: BoxFit.contain,
-              errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        decoration: BoxDecoration(
+          color: Colors.yellow.shade700,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(color: Colors.black26, blurRadius: 4),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Name & Types
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    widget.pokemon.name,
+                    style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18),
+                  ),
+                  Text(
+                    widget.pokemon.types.join(', '),
+                    style: const TextStyle(color: Colors.black87),
+                  ),
+                ],
+              ),
             ),
-          ),
-
-          // Stats
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Abilities: ${widget.pokemon.abilities.join(', ')}"),
-                const SizedBox(height: 5),
-                Text(
-                  "HP: ${widget.pokemon.baseStats['hp']} "
-                      " ATK: ${widget.pokemon.baseStats['atk']} "
-                      " DEF: ${widget.pokemon.baseStats['def']}\n"
-                      "SpA: ${widget.pokemon.baseStats['spa']} "
-                      " SpD: ${widget.pokemon.baseStats['spd']} "
-                      " SPE: ${widget.pokemon.baseStats['spe']}",
-                  style: const TextStyle(fontSize: 12),
-                ),
-              ],
+            // Image
+            Container(
+              height: 150,
+              width: double.infinity,
+              color: Colors.yellow.shade100,
+              child: Image.network(
+                widget.pokemon.image,
+                fit: BoxFit.contain,
+                errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
+              ),
             ),
-          ),
-
-          // Username + Likes
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Text(widget.username ?? "", style: const TextStyle(color: Colors.black54, fontSize: 12)),
-                const Spacer(),
-                IconButton(
-                  icon: Icon(isLiked ? Icons.favorite : Icons.favorite_border, color: Colors.red),
-                  onPressed: toggleLike,
-                ),
-                Text(likesCount.toString(), style: const TextStyle(color: Colors.black54)),
-              ],
+            // Stats
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Abilities: ${widget.pokemon.abilities.join(', ')}"),
+                  const SizedBox(height: 5),
+                  Text(
+                    "HP: ${widget.pokemon.baseStats['hp']} "
+                        " ATK: ${widget.pokemon.baseStats['atk']} "
+                        " DEF: ${widget.pokemon.baseStats['def']}\n"
+                        "SpA: ${widget.pokemon.baseStats['spa']} "
+                        " SpD: ${widget.pokemon.baseStats['spd']} "
+                        " SPE: ${widget.pokemon.baseStats['spe']}",
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+            // Username + Likes
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Text(widget.username ?? "",
+                      style: const TextStyle(
+                          color: Colors.black54, fontSize: 12)),
+                  const Spacer(),
+                  IconButton(
+                    icon: Icon(isLiked ? Icons.favorite : Icons.favorite_border,
+                        color: Colors.red),
+                    onPressed: toggleLike,
+                  ),
+                  Text(likesCount.toString(),
+                      style: const TextStyle(color: Colors.black54)),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

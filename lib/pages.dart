@@ -18,3 +18,5 @@ export 'services/location.dart';
 export 'view_models/likes_view_model.dart';
 export 'views/carddetails_view.dart';
 export 'nav.dart';
+export 'models/comments_model.dart';
+export 'view_models/comments_view_model.dart';

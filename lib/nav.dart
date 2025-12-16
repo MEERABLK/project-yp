@@ -11,21 +11,13 @@ class MainShell extends StatefulWidget {
 class _MainShellState extends State<MainShell> {
   int _currentIndex = 0;
 
-  // Details overlay (when not null, show details on top of tabs)
-  PokemonModel? _selectedPokemon;
 
-  void openPokemonDetails(PokemonModel p) {
-    setState(() => _selectedPokemon = p);
-  }
 
-  void closeDetails() {
-    setState(() => _selectedPokemon = null);
-  }
 
   @override
   Widget build(BuildContext context) {
     final tabs = [
-      HomeView(onOpenPokemon: openPokemonDetails),
+      HomeView(),
       const Placeholder(),
       const Placeholder(),
       const ProfileView(),
@@ -36,12 +28,7 @@ class _MainShellState extends State<MainShell> {
         children: [
           tabs[_currentIndex],
 
-          // DETAILS OVERLAY (keeps nav bar visible)
-          if (_selectedPokemon != null)
-            CardDetailsView(
-              pokemon: _selectedPokemon!,
-              // onBack: closeDetails,
-            ),
+
         ],
       ),
 
