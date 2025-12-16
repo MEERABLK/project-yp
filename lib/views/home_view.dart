@@ -175,14 +175,10 @@ class _HomeViewScreenState extends State<HomeView> {
                         child: PokemonConceptCard(pokemon: p),
                       )),
                       ...filteredYugioh.map((c) => ConceptCard(
-                        cardId: (c.id ?? c.name).toString(),
-                        title: c.name,
-                        type: c.type,
-                        description: c.desc,
-                        // color: HexColor("#c2924d"),
+                        yugioh: c,
                         color: HexColor("#5c2e1a"),
-                        imageUrl: c.card_images.image_url_cropped,
                       )),
+
                     ],
                   ),
               ],
@@ -290,16 +286,16 @@ class _PokemonConceptCardState extends State<PokemonConceptCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.of(context).push(
+      onTap: () async {
+        await Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (_) =>
-                CardDetailsView(
-                  pokemon: widget.pokemon,
-                ),
+            builder: (_) => CardDetailsView(pokemon: widget.pokemon),
           ),
         );
+
+        fetchLikes();
       },
+
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
         decoration: BoxDecoration(
@@ -391,17 +387,12 @@ class _PokemonConceptCardState extends State<PokemonConceptCard> {
 
 // Concept Card with Likes
 class ConceptCard extends StatefulWidget {
-  final String cardId;
-  final String title, type, description, imageUrl;
+  final YugiohModel yugioh;
   final Color color;
 
   const ConceptCard({
-    required this.cardId,
-    required this.title,
-    required this.type,
-    required this.description,
+    required this.yugioh,
     required this.color,
-    required this.imageUrl,
     super.key,
   });
 
@@ -415,6 +406,8 @@ class _ConceptCardState extends State<ConceptCard> {
   final String? userId = FirebaseAuth.instance.currentUser?.uid;
   final LikesViewModel likesVM = LikesViewModel();
 
+  String get cardId => widget.yugioh.id.toString();
+
   @override
   void initState() {
     super.initState();
@@ -422,8 +415,9 @@ class _ConceptCardState extends State<ConceptCard> {
   }
 
   void fetchLikes() async {
-    if (widget.cardId.isEmpty) return;
-    LikesModel? likes = await likesVM.getLikes(widget.cardId);
+    if (cardId.isEmpty) return;
+    LikesModel? likes = await likesVM.getLikes(cardId);
+
     setState(() {
       likesCount = likes?.userIds.length ?? 0;
       isLiked = userId != null && (likes?.userIds.contains(userId) ?? false);
@@ -435,13 +429,13 @@ class _ConceptCardState extends State<ConceptCard> {
     if (uid == null) return;
 
     if (isLiked) {
-      await likesVM.removeLike(widget.cardId, uid);
+      await likesVM.removeLike(cardId, uid);
       setState(() {
         isLiked = false;
         likesCount -= 1;
       });
     } else {
-      await likesVM.addLike(widget.cardId, uid);
+      await likesVM.addLike(cardId, uid);
       setState(() {
         isLiked = true;
         likesCount += 1;
@@ -451,92 +445,121 @@ class _ConceptCardState extends State<ConceptCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        color: widget.color, // brown background for Yu-Gi-Oh
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 4,
-          ),
-        ],
+    final c = widget.yugioh;
 
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header: title & type
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(widget.title,
-                    style: const TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18)),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.black26,
-                    borderRadius: BorderRadius.circular(8),
+    return GestureDetector(
+      onTap: () async {
+        await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => YugiohView(yugiohModel: widget.yugioh),
+          ),
+        );
+
+        fetchLikes();
+      },
+
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        decoration: BoxDecoration(
+          color: widget.color,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: const [
+            BoxShadow(color: Colors.black26, blurRadius: 4),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      c.name,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                  child: Text(widget.type,
-                      style: const TextStyle(color: Colors.black, fontSize: 12,fontWeight: FontWeight.bold)),
-                )
-              ],
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.black26,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      c.type,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
 
-// Middle: Cropped Image - Full width, centered
-          // Image container with fixed image size and spacing
-          Container(
-            width: double.infinity, // full width container
-            // color: Colors.brown.shade700, // dark brown background
-            // color: HexColor("#c2924d"),
-            // color: HexColor("#8a3f20"),
-            color: HexColor("#2c1b12"),
-            padding: const EdgeInsets.all(16), // space on all sides
-            child: Center(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  widget.imageUrl,
-                  width: 150,
-                  height: 150,
-                  fit: BoxFit.cover, // fills the 150x150 box
-                  errorBuilder: (c, e, s) =>
-                  const Icon(Icons.broken_image, color: Colors.white),
+            // Image
+            Container(
+              width: double.infinity,
+              color: HexColor("#2c1b12"),
+              padding: const EdgeInsets.all(16),
+              child: Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.network(
+                    c.card_images.image_url_cropped,
+                    width: 150,
+                    height: 150,
+                    fit: BoxFit.cover,
+                    errorBuilder: (c, e, s) =>
+                    const Icon(Icons.broken_image, color: Colors.white),
+                  ),
                 ),
               ),
             ),
-          ),
 
-
-          // Description
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(widget.description, style: const TextStyle(color: Colors.black)),
-          ),
-
-          // Likes
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                const Spacer(),
-                IconButton(
-                  icon: Icon(isLiked ? Icons.favorite : Icons.favorite_border, color: Colors.red),
-                  onPressed: toggleLike,
-                ),
-                Text(likesCount.toString(), style: const TextStyle(color: Colors.white70)),
-              ],
+            // Description
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                c.desc,
+                style: const TextStyle(color: Colors.black),
+                maxLines: 4,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          ),
-        ],
+
+            // Likes
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  const Spacer(),
+                  IconButton(
+                    icon: Icon(
+                      isLiked ? Icons.favorite : Icons.favorite_border,
+                      color: Colors.red,
+                    ),
+                    onPressed: toggleLike,
+                  ),
+                  Text(
+                    likesCount.toString(),
+                    style: const TextStyle(color: Colors.white70),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
-
