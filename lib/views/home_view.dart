@@ -285,8 +285,9 @@ class _PokemonConceptCardState extends State<PokemonConceptCard> {
         color: Colors.yellow.shade700,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2)),
+          BoxShadow(color: Colors.black26, blurRadius: 4),
         ],
+
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -432,8 +433,12 @@ class _ConceptCardState extends State<ConceptCard> {
         color: widget.color, // brown background for Yu-Gi-Oh
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2)),
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 4,
+          ),
         ],
+
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
