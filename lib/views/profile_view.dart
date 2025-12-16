@@ -10,6 +10,7 @@ class ProfileView extends StatefulWidget {
 
 class _ProfileViewScreenState extends State<ProfileView> {
   final GoogleSignIn googleSignIn = GoogleSignIn(); // global/shared instance
+  final String? userEmail = FirebaseAuth.instance.currentUser?.email;
 
   Future<void> logout() async {
     showDialog(
