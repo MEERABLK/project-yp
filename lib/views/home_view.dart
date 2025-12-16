@@ -31,7 +31,7 @@ class _HomeViewScreenState extends State<HomeView> {
   void initState() {
     super.initState();
     fetchCards();
-    fetchPokemonCards();
+    fetchPokemon();
     fetchLocation();
   }
   void _goToProfile() {
@@ -59,7 +59,7 @@ class _HomeViewScreenState extends State<HomeView> {
     }
   }
 
-  void fetchPokemonCards() async {
+  void fetchPokemon() async {
     List<PokemonModel>? data = await ApiService().getPokemon();
     List<Map<String, dynamic>>? firestoreData = await fetchAllDocs('PokemonCards');
     List<PokemonModel> firestorePokemon = [];
