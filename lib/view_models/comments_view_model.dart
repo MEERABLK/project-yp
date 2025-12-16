@@ -19,12 +19,39 @@ class CommentsViewModel {
     return items.map((e) => CommentItem.fromMap(e)).toList();
   }
 
-  Future<void> addComment(
-      String cardId,
-      CommentItem comment,
-      ) async {
+  Future<void> addComment(String cardId,
+      CommentItem comment,) async {
     await commentsCollection.doc(cardId).set({
       'items': FieldValue.arrayUnion([comment.toMap()])
     }, SetOptions(merge: true));
   }
+
+  Future<void> deleteComment(String cardId, CommentItem comment) async {
+    await commentsCollection.doc(cardId).set({
+      'items': FieldValue.arrayRemove([comment.toMap()])
+    }, SetOptions(merge: true));
+  }
+
+
+
+Future<void> updateComment(
+    String cardId,
+    CommentItem oldComment,
+    String newText,
+    ) async {
+  final updated = CommentItem(
+    userId: oldComment.userId,
+    username: oldComment.username,
+    text: newText,
+    createdAt: oldComment.createdAt,
+  );
+
+  await commentsCollection.doc(cardId).set({
+    'items': FieldValue.arrayRemove([oldComment.toMap()])
+  }, SetOptions(merge: true));
+
+  await commentsCollection.doc(cardId).set({
+    'items': FieldValue.arrayUnion([updated.toMap()])
+  }, SetOptions(merge: true));
 }
+  }

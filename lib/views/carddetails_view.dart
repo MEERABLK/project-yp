@@ -78,6 +78,43 @@ class _CardDetailsViewState extends State<CardDetailsView> {
     commentController.clear();
     fetchComments();
   }
+  void deleteComment(CommentItem comment) async {
+    await commentsVM.deleteComment(
+      widget.pokemon.name,
+      comment,
+    );
+    fetchComments();
+  }
+
+  void editComment(CommentItem comment) {
+    final controller = TextEditingController(text: comment.text);
+
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text("Edit Comment"),
+        content: TextField(controller: controller),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () async {
+              await commentsVM.updateComment(
+                widget.pokemon.name,
+                comment,
+                controller.text.trim(),
+              );
+              Navigator.pop(context);
+              fetchComments();
+            },
+            child: const Text("Save"),
+          ),
+        ],
+      ),
+    );
+  }
 
 
   void fetchLikes() async {
@@ -302,13 +339,17 @@ class _CardDetailsViewState extends State<CardDetailsView> {
                       else
                         ...comments.map(
                               (c) => Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
+                            padding: const EdgeInsets.only(bottom: 12),
                             child: _CommentItem(
                               username: c.username,
                               comment: c.text,
+                              isOwner: c.userId == userId,
+                              onDelete: () => deleteComment(c),
+                              onEdit: () => editComment(c),
                             ),
                           ),
                         ),
+
 
                       const SizedBox(height: 12),
 
@@ -386,10 +427,16 @@ class _ActionItem extends StatelessWidget {
 class _CommentItem extends StatelessWidget {
   final String username;
   final String comment;
+  final bool isOwner;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
   const _CommentItem({
     required this.username,
     required this.comment,
+    required this.isOwner,
+    this.onEdit,
+    this.onDelete,
   });
 
   @override
@@ -403,23 +450,40 @@ class _CommentItem extends StatelessWidget {
           child: Icon(Icons.person, size: 18, color: Colors.white),
         ),
         const SizedBox(width: 10),
+
         Expanded(
-          child: RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: "$username  ",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    username,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                TextSpan(
-                  text: comment,
-                  style: const TextStyle(color: Colors.white70),
-                ),
-              ],
-            ),
+
+                  if (isOwner) ...[
+                    const Spacer(),
+                    IconButton(
+                      icon: const Icon(Icons.edit, size: 18, color: Colors.white70),
+                      onPressed: onEdit,
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete, size: 18, color: Colors.redAccent),
+                      onPressed: onDelete,
+                    ),
+                  ],
+                ],
+              ),
+
+              Text(
+                comment,
+                style: const TextStyle(color: Colors.white70),
+              ),
+            ],
           ),
         ),
       ],
