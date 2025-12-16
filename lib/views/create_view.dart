@@ -11,6 +11,8 @@ class CreateView extends StatefulWidget {
 class _CreateViewState extends State<CreateView> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return const Scaffold(
+
+    );
   }
 }

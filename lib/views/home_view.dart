@@ -61,12 +61,28 @@ class _HomeViewScreenState extends State<HomeView> {
 
   void fetchPokemonCards() async {
     List<PokemonModel>? data = await ApiService().getPokemon();
+    List<Map<String, dynamic>>? firestoreData = await fetchAllDocs('PokemonCards');
+    List<PokemonModel> firestorePokemon = [];
+
+    firestoreData.forEach((Map<String, dynamic> pokemon) {
+      firestorePokemon.add(PokemonModel.fromJson(pokemon));
+    });
+
     if (data != null && data.isNotEmpty) {
       setState(() {
         pokemonCards = data.take(5).toList();
+        pokemonCards.addAll(firestorePokemon);
         loadingPokemon = false;
       });
     }
+  }
+
+  Future<List<Map<String,dynamic>>> fetchAllDocs(String collectionPath) async {
+    final QuerySnapshot snapshot = await FirebaseFirestore.instance.collection(collectionPath).get();
+
+    return snapshot.docs
+        .map((doc) => doc.data() as Map<String, dynamic>)
+        .toList();
   }
 
   @override
