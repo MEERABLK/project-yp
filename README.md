@@ -1,16 +1,23 @@
-# projectyp
+# Project YP – Flutter App
 
-A new Flutter project.
+## Description
+Flutter mobile application developed for course evaluation.
 
-## Getting Started
+## How to Run (Android Studio)
+1. Open project in Android Studio
+2. Run `flutter pub get`
+3. Connect emulator or physical device
+4. Press Run 
 
-This project is a starting point for a Flutter application.
+## APK
+APK included in:
+SUBMISSION_APK/app-release.apk
 
-A few resources to get you started if this is your first Flutter project:
+## Requirements
+- Flutter SDK
+- Android Studio
+- Android emulator or physical device
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Notes
+- Firebase is used
+- Internet connection required
