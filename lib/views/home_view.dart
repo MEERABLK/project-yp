@@ -22,7 +22,7 @@ class _HomeViewScreenState extends State<HomeView> {
 
   final List<Widget> _screens = [
     Container(),
-    Placeholder(),
+    MyConceptView(),
     CreateView(),
     ProfileView(),
   ];
@@ -60,22 +60,35 @@ class _HomeViewScreenState extends State<HomeView> {
   }
 
   void fetchPokemon() async {
-    List<PokemonModel>? data = await ApiService().getPokemon();
-    List<Map<String, dynamic>>? firestoreData = await fetchAllDocs('PokemonCards');
-    List<PokemonModel> firestorePokemon = [];
+    try {
+      final data = await ApiService().getPokemon();
 
-    firestoreData.forEach((Map<String, dynamic> pokemon) {
-      firestorePokemon.add(PokemonModel.fromJson(pokemon));
-    });
+      // Firestore part can fail if rules block it
+      List<Map<String, dynamic>> firestoreData = [];
+      try {
+        firestoreData = await fetchAllDocs('PokemonCards');
+      } catch (e) {
+        debugPrint("Firestore PokemonCards error: $e");
+        firestoreData = [];
+      }
 
-    if (data != null && data.isNotEmpty) {
+      final firestorePokemon = firestoreData
+          .map((m) => PokemonModel.fromJson(m))
+          .toList();
+
+      if (!mounted) return;
       setState(() {
-        pokemonCards = data.take(5).toList();
+        pokemonCards = (data ?? []).take(5).toList();
         pokemonCards.addAll(firestorePokemon);
         loadingPokemon = false;
       });
+    } catch (e) {
+      debugPrint("fetchPokemon error: $e");
+      if (!mounted) return;
+      setState(() => loadingPokemon = false);
     }
   }
+
 
   Future<List<Map<String,dynamic>>> fetchAllDocs(String collectionPath) async {
     final QuerySnapshot snapshot = await FirebaseFirestore.instance.collection(collectionPath).get();

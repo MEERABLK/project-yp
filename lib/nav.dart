@@ -18,7 +18,7 @@ class _MainShellState extends State<MainShell> {
   Widget build(BuildContext context) {
     final tabs = [
       HomeView(),
-      const Placeholder(),
+      const MyConceptView(),
       const CreateView(),
       const ProfileView(),
     ];

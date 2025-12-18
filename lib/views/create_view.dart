@@ -53,6 +53,15 @@ class _CreateViewState extends State<CreateView> {
   }
 
   Future<void> _submitData() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please login first.")),
+      );
+      return;
+    }
+
+
     if (_formKey.currentState!.validate()) {
       try {
         // Construct Types Array
@@ -77,6 +86,8 @@ class _CreateViewState extends State<CreateView> {
             'spd': _spd.round(),
             'spe': _spe.round(),
           },
+          'createdBy': uid,
+          'createdAt': FieldValue.serverTimestamp(),
         };
 
 

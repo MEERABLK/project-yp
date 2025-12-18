@@ -21,3 +21,4 @@ export 'nav.dart';
 export 'models/comments_model.dart';
 export 'view_models/comments_view_model.dart';
 export 'views/yugioh_view.dart';
+export 'views/myconcept_view.dart';
