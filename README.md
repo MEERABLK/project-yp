@@ -11,7 +11,7 @@ Flutter mobile application developed for course evaluation.
 
 ## APK
 APK included in:
-SUBMISSION_APK/app-release.apk
+build\app\outputs\flutter-apk\app-release.apk
 
 ## Requirements
 - Flutter SDK
