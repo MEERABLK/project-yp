@@ -150,7 +150,7 @@ project-yp/
 ├── .gitignore
 ├── .metadata
 │
-├── ProjectYP_Presentation.pdf
+├── ProjectYP_Presentation.pdf # Complete Presentation on the project including the flow and additionnal information
 ├── README.md
 ├── analysis_options.yaml
 ├── app-release.apk        # Release APK
